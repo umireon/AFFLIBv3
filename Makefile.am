@@ -1,5 +1,10 @@
 # Distributed under the Berekeley 4-part license
 
+DISTCLEANFILES = \
+	Makefile.in aclocal.m4 affconfig.h.in config.guess config.sub configure depcomp \
+	install-sh ltmain.sh missing test-driver \
+	m4/libtool.m4 m4/ltoptions.m4 m4/ltsugar.m4 m4/ltversion.m4 m4/lt~obsolete.m4
+
 SUBDIRS = lib tools lzma443 tests doc pyaff man
 
 pkgconfigdir = $(libdir)/pkgconfig
@@ -79,7 +84,6 @@ EXTRA_DIST = $(DOCS) \
 	win32/affconfig.h \
 	win32/afflib.mak \
 	win32/make.bat
-
 
 #
 # Note: don't forget to run autoreconf when significant changes are made

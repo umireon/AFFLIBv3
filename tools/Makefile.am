@@ -1,6 +1,8 @@
 bin_PROGRAMS = affcat affcompare affconvert affcopy affcrypto affix affinfo affsegment \
 	affstats affverify affxml affuse affrecover affsign affdiskprint
 
+DISTCLEANFILES = Makefile.in
+
 EXTRA_DIST = test_make_random_iso.sh test_crypto.sh test_signing.sh test_recovery.sh \
 	test_passphrase.sh test_afsegment.sh 
 

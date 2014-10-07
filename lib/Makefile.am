@@ -2,6 +2,7 @@ EXTRA_PROGRAMS = aftest
 TESTS = aftest 
 
 CLEANFILES = aftest
+DISTCLEANFILES = Makefile.in
 
 AUTOMAKE_OPTIONS = subdir-objects
 

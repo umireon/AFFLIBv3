@@ -1,3 +1,4 @@
+DISTCLEANFILES = Makefile.in
 EXTRA_DIST = PKG-INFO README pyaff.c setup.py
 
 if HAVE_PYTHON

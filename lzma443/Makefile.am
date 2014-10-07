@@ -1,6 +1,8 @@
 # We don't actually build LZMA; we just
 # want to bring along the source code to satisfy LGPL requirements.
 
+DISTCLEANFILES = Makefile.in
+
 EXTRA_DIST = \
 7zC.txt \
 7zFormat.txt \
