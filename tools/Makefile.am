@@ -8,10 +8,7 @@ TESTS = test_signing.sh test_recovery.sh test_passphrase.sh test_afsegment.sh te
 
 # See http://www.gnu.org/software/libtool/manual.html		# Using-Automake
 
-AM_LDFLAGS = -static		# staticly link our tools (easier debugging)
-
 affcat_SOURCES = affcat.cpp 
-
 affcrypto_SOURCES = affcrypto.cpp
 affcompare_SOURCES = affcompare.cpp  unix4win32.h
 affconvert_SOURCES = affconvert.cpp  unix4win32.h
