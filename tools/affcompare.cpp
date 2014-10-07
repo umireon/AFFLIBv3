@@ -92,7 +92,7 @@ void usage()
     printf("       compares file1 with file2\n");
     printf("\n");
     printf("or     affcompare [options] -r dir1 dir2\n");
-    printf("       comparses similarly-named files in dir1 and dir2\n");
+    printf("       compares similarly-named files in dir1 and dir2\n");
     printf("\n");
     printf("or     affcompare [options] -s file1 file2...\n");
     printf("       Reports if file was successfully copied to Amazon S3\n");
@@ -118,7 +118,6 @@ void usage()
     printf("       -c        --- print the contents of differing sectors\n");
     printf("       -m        --- Just report about the data (ignore metadata)\n");
     printf("       -P ###    --- Just examine the differences on page ###\n");
-    printf("       -q        --- Quiet; no output except for errors.\n");
     printf("\n");
     printf("Options documented above:\n");
     printf("       -r dir1 dir2 --- recursively compare what's in dir1 with dir2, and\n");

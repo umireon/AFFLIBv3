@@ -83,7 +83,8 @@ void usage()
     printf("\n");
     printf("usage:   %s [options] file1 [... files] \n",progname);
     printf("\n");
-    printf("examples:\n");
+    printf("Please, see more info in manpage.");
+/*    printf("examples:\n");
     printf("  %s file1.iso --- convert file1.iso to file1.aff\n",progname);
     printf("  %s file1.iso file2.iso file3.iso...  --- batch convert files\n",progname);
     printf("  %s -r -e iso image.aff --- convert image.aff to image.iso\n",progname);
@@ -116,6 +117,7 @@ void usage()
     printf("      -Z       -- Do not automatically probe for gzip/bzip2 compression.\n");
     printf("      -y       -- Always answer yes/no questions 'yes.'\n");
     printf("      -V = Just print the version number and exit.\n");
+*/
     printf("\n");
     exit(0);
 }

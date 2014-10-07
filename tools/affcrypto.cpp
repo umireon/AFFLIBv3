@@ -525,7 +525,7 @@ int main(int argc,char **argv)
 	
 	if(opt_xml){
 	    /* This should be replaced with our xml.cpp object */
-	    printf("<afcrypto>\n");
+	    printf("<affcrypto>\n");
 	    printf("  <image_filename>%s</image_filename>\n",fname);
 	    printf("  <segment_count_total>%d</segment_count_total>\n",vni.segment_count_total);
 	    printf("  <segment_count_signed>%d</segment_count_signed>\n",vni.segment_count_signed);
@@ -535,7 +535,7 @@ int main(int argc,char **argv)
 	    if(the_passphrase){
 		printf("  <passphrase correct='1'>%s</passphrase>\n",the_passphrase);
 	    }
-	    printf("</afcrypto>\n");
+	    printf("</affcrypto>\n");
 	}
 	else{
 	    /* re-run vstat because counts may have changed */
