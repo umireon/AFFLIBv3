@@ -175,6 +175,9 @@ typedef unsigned short _mode_t;
 #endif
 /** END OF WIN32 DEFINES **/
 
+#ifndef MAXPATHLEN
+#define MAXPATHLEN 1024
+#endif
 
 #ifdef HAVE_SYS_PARAM_H
 #include <sys/param.h>
