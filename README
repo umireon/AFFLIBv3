@@ -1,11 +1,15 @@
+	The Advanced Forensic Format
+		Library and Tools
+		Version 3
 
-		     The Advanced Forensic Format
-			  Library and Tools
-			      Version 3
+	Primary author:
+		Simson L. Garfinkel
+		Naval Postgraduate School
+		2012
 
-			 Simson L. Garfinkel
-		      Naval Postgraduate School
-				 2012
+	Current author / maintainer:
+		Phillip Hellewell
+		2014
 
 
 The Advanced Forensic Format (AFF) is on-disk format for storing
