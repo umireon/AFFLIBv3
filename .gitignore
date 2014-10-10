@@ -47,6 +47,7 @@ autom4te.cache
 Makefile
 Makefile.in
 Makefile.in
+tags
 TAGS
 a.out.dSYM
 aclocal.m4
@@ -78,7 +79,6 @@ test-driver
 # Executables
 .deps
 .libs
-TAGS
 tools/affdiskprint
 tools/affcat
 tools/affcompare
