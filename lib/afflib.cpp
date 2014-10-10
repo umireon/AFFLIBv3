@@ -357,6 +357,7 @@ AFFILE *af_open(const char *filename,int flags,int mode)
 {
     if(!aff_initialized) af_initialize();
     if(ends_with(filename,".E01") || ends_with(filename,".e01")){
+	errno = EINVAL;
 	return 0;
     }
 
