@@ -59,7 +59,7 @@ configure script. Do that with these commands:
     $ make
 
 
-Other kit commands that may be useful:
+Other git commands that may be useful:
  
     $ git add [-f] filename              (adds a file)
     $ git commit                         (commits to local repo)
