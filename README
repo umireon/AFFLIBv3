@@ -1,16 +1,10 @@
-	The Advanced Forensic Format
-		Library and Tools
-		Version 3
+		The Advanced Forensic Format
+			Library and Tools
+			Version 3
 
-	Primary author:
-		Simson L. Garfinkel
-		Naval Postgraduate School
-		2012
-
-	Current author / maintainer:
-		Phillip Hellewell
-		2014
-
+	2005-2006 Basis Technology, Inc.
+	2005-2013 Simson L. Garfinkel <simsong@acm.org>
+	2014 Phillip Hellewell <sshock@gmail.com>
 
 The Advanced Forensic Format (AFF) is on-disk format for storing
 computer forensic information. Critical features of AFF include:
