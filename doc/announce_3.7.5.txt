@@ -1,7 +1,7 @@
 			ANNOUNCING AFFLIB 3.7.5
 			Oct 11, 2014
 
-AFFLIB is no longer being mainted by Simson Garfinkel.
+AFFLIB is no longer being maintained by Simson Garfinkel.
 - See https://github.com/simsong/AFFLIBv3/issues/16 for details.
 
 My name is Phillip Hellewell.  To keep AFFLIB alive I created a fork
