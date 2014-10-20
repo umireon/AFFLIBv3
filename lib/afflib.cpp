@@ -596,16 +596,8 @@ int af_make_badflag(AFFILE *af)
     if(af->badflag!=0) free(af->badflag);
     af->badflag = (unsigned char *)malloc(af->image_sectorsize); // current sector size
 
-#ifdef HAVE_RAND_pseudo_bytes
-    /* Use a good random number generator if we have it */
     RAND_pseudo_bytes(af->badflag,af->image_sectorsize);
     strcpy((char *)af->badflag,"BAD SECTOR");
-#else
-    /* Otherwise use a bad one */
-    for(uint32_t i=0;i<af->image_sectorsize;i++){
-      af->badflag[i] = rand() & 0xff;
-    }
-#endif
 
     AF_WRLOCK(af);
     af->badflag_set = 1;

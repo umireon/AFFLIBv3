@@ -233,13 +233,7 @@ int random_read_test(int total_bytes,int data_page_size)
     unsigned char *buf2 = (unsigned char *)malloc(total_bytes);
 
     /* First half is random */
-#ifdef HAVE_RAND_PSEUDO_BYTES
     RAND_pseudo_bytes(buf,total_bytes/2);
-#else
-    for(int i=0;i<total_bytes/2;i++){
-	buf[i] = random();
-    }
-#endif
 
     /* Second half is a bit more predictable */
     for(int i=total_bytes/2;i<total_bytes;i++){

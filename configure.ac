@@ -81,7 +81,7 @@ AC_STRUCT_ST_RDEV
 
 
 # Specific headers that I plan to use
-AC_CHECK_HEADERS([arpa/inet.h assert.h ctype.h dmalloc.h err.h errno.h fcntl.h getopt.h inttypes.h linux/fs.h malloc.h ncurses/term.h netinet/in.h regex.h signal.h stdint.h stdio.h stdlib.h string.h sys/cdefs.h sys/disk.h sys/file.h sys/ioctl.h sys/ioctl.h sys/param.h sys/param.h sys/socket.h sys/signal.h sys/stat.h sys/time.h sys/types.h sys/vfs.h sysexits.h term.h time.h unistd.h zlib.h _mingw.h])
+AC_CHECK_HEADERS([arpa/inet.h assert.h ctype.h dmalloc.h err.h errno.h fcntl.h getopt.h inttypes.h linux/fs.h malloc.h netinet/in.h regex.h signal.h stdint.h stdio.h stdlib.h string.h sys/cdefs.h sys/disk.h sys/file.h sys/ioctl.h sys/ioctl.h sys/param.h sys/param.h sys/socket.h sys/signal.h sys/stat.h sys/time.h sys/types.h sys/vfs.h sysexits.h term.h time.h unistd.h zlib.h _mingw.h])
 
 AC_CHECK_LIB([regex],[regcomp])        # see if we need -lregex
 
@@ -115,10 +115,9 @@ AC_LANG_POP([C++])
 AC_CHECK_HEADERS([readline/readline.h])
 AC_CHECK_HEADERS([curses.h termcap.h])
 AC_CHECK_LIB([readline],[readline],, AC_MSG_RESULT([readline not installed]))
-AC_CHECK_LIB([ncurses],[initscr],, AC_MSG_RESULT([ncurses not installed]))
 AC_CHECK_LIB([z],[uncompress],, AC_MSG_ERROR([zlib not installed; cannot continue. Try adding zlib-dev or zlib1g-dev.]))
 AC_CHECK_LIB([rt],[aio_error64])
-AC_SEARCH_LIBS(tgetent, termlib termcap tinfo curses ncurses)
+AC_SEARCH_LIBS(tgetent, termlib termcap curses)
 AC_CHECK_FUNCS(putp tputs tgoto tgetstr tgetnum gotorc beep endwin setupterm printw)
 
 ################################################################
@@ -217,18 +216,15 @@ AM_CONDITIONAL(HAVE_PYTHON, test "$enable_python" = yes)
 ################################################################
 ################################################################
 ## Crypto (must follow S3)
-## Note: -lssl is needed on Linux
-##       -lcrypto is needed on MacOS
+## Note: -lcrypto is needed on Linux and MacOS
 ##       -lmd is needed on some older systems
-##       -lssl and -lcrypto are needed if using libressl
+##       TBD: is -lssl needed if using libressl?
 ## Always check for headers, then libs, then functions
 ###
 
 AC_CHECK_HEADERS([openssl/aes.h openssl/bio.h openssl/evp.h openssl/hmac.h openssl/md5.h openssl/rand.h openssl/rsa.h openssl/sha.h openssl/pem.h openssl/x509.h])
 
-AC_CHECK_LIB([crypto],[EVP_get_digestbyname])
-
-AC_CHECK_LIB([ssl],[SSL_library_init],,
+AC_CHECK_LIB([crypto],[EVP_get_digestbyname],,
 	AC_MSG_ERROR([OpenSSL developer library 'libssl-dev' or 'openssl-devel' not installed; cannot continue.]))
 
 AC_CHECK_LIB([md],[MD5])		# if libmd is available, get it

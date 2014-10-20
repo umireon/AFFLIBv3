@@ -41,10 +41,6 @@ using namespace std;
 #include <term.h>
 #endif
 
-#ifdef HAVE_NCURSES_TERM_H
-#include <ncurses/term.h>
-#endif
-
 #ifdef WIN32
 #include "unix4win32.h"
 #endif
@@ -770,16 +766,6 @@ int main(int argc,char **argv)
 {
     int ch;
     const char *infile;
-
-    /* Figure out how many cols the screen has... */
-#ifdef HAVE_LIBNCURSES
-    term = getenv("TERM");
-    if(term){
-	setupterm((char *)0,1,(int *)0);
-	start_color();
-	cols = tgetnum((char *)"co");
-    }
-#endif
 
     while ((ch = getopt(argc, argv, "abh?s:SmiIwj:p:xvVX5dAl")) != -1) {
 	switch (ch) {

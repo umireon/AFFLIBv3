@@ -104,7 +104,7 @@ void __cdecl AFDbgPrint (PCSTR Format,...);
 #include <alloca.h>
 #endif
 
-#ifdef HAVE_LIBSSL
+#ifdef HAVE_LIBCRYPTO
 #include <openssl/aes.h>
 #include <openssl/rsa.h>		// a standard part of OpenSSL
 #include <openssl/rand.h>
