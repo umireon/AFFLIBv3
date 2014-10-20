@@ -690,7 +690,7 @@ int main(int argc,char **argv)
 	 */
 	if(opt_outdir){
 	    cc = strrchr(outfile,'/');
-	    char filename[PATH_MAX];
+	    char filename[MAXPATHLEN];
 	    if(cc){
 		strlcpy(filename,cc+1,sizeof(filename));	// just the filename
 	    }
