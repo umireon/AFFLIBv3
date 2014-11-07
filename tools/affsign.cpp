@@ -256,10 +256,9 @@ int remove_signatures(const char *fn)
 
 int main(int argc,char **argv)
 {
-    int bflag, ch;
+    int ch;
     int opt_zap = 0;
 
-    bflag = 0;
     while ((ch = getopt(argc, argv, "nk:c:h?vZ")) != -1) {
 	switch (ch) {
 	case 'n': opt_note = 1;break;

@@ -266,7 +266,7 @@ static int s3_update_seg(AFFILE *af, const char *name,
 {
     struct s3_private *sp =S3_PRIVATE(af);
     char metabuf[64];
-    snprintf(metabuf,sizeof(metabuf),"%lu",arg);	// get the arg
+    snprintf(metabuf,sizeof(metabuf),"%u",arg);	// get the arg
     struct s3headers meta[] = {{S3_HEADER_ARG,metabuf},{0,0}};
 
     sp->current_seg = name;

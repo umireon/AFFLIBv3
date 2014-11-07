@@ -553,7 +553,7 @@ response_buffer *get_url(const char *url)
 	curl_easy_setopt(c,CURLOPT_WRITEFUNCTION,buffer_write);
 	curl_easy_setopt(c,CURLOPT_WRITEDATA,b);
 	curl_easy_setopt(c,CURLOPT_URL,url);
-	int success = curl_easy_perform(c);
+	curl_easy_perform(c);
 	curl_easy_getinfo(c,CURLINFO_RESPONSE_CODE,&b->result);
 	curl_easy_cleanup(c);
     } while(b->result!=200 && ++retry_count<s3_retry_max);
@@ -620,9 +620,7 @@ static const char *hexbuf(char *dst,int dst_len,const unsigned char *bin,int byt
 	bytes--;
 	charcount++;			// how many characters
 
-	bool add_spaces = false;
-	if(flag & HEXBUF_SPACE2) add_spaces = true;
-	if((flag & HEXBUF_SPACE4) && charcount%2==0){
+	if((flag & HEXBUF_SPACE2) || ((flag & HEXBUF_SPACE4) && charcount%2==0)){
 	    *dst++ = ' ';
 	    *dst   = '\000';
 	    dst_len -= 1;

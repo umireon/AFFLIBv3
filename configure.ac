@@ -144,7 +144,7 @@ AC_DEFINE(USE_LZMA, 1, [Enable LZMA compression])
 ## S3 requires curl and expat; otherwise we don't need them
 AC_ARG_ENABLE(s3,
 	AC_HELP_STRING([--enable-s3=yes],
-          [Support for Amazon's S3 service. Requires CURL and Expat.]),
+          [Support for Amazon S3 service. Requires CURL and Expat.]),
           [enable_s3=$enableval], [enable_s3=no])
 
 if test "x${enable_s3}" = "xyes" ; then
