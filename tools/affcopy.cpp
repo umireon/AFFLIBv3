@@ -394,7 +394,9 @@ int affcopy(char *infile,vector<string> &outfiles)
 
 	    u_char seghash[32]; /* resultant message digest; could be any size */
 	    unsigned int seghash_len = sizeof(seghash); /* big enough to hold SHA256 */
+#ifdef USE_AFFSIGS
 	    int sigmode = AF_SIGNATURE_MODE0;
+#endif
 
 	    memset(seghash,0,sizeof(seghash));
 
@@ -405,7 +407,9 @@ int affcopy(char *infile,vector<string> &outfiles)
 		if(copy_page(ain,aout->af,pagenumber,arg,seghash,&seghash_len)==0){
 		    preened_pages.push_back(pagenumber); // preened pages won't be verified by md5
 		    if(opt_debug && opt_preen) printf(" (PREENED) ");
+#ifdef USE_AFFSIGS
 		    sigmode = AF_SIGNATURE_MODE1;
+#endif
 		    copied = true;
 		}
 	    }
