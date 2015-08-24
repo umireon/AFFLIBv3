@@ -12,7 +12,7 @@ computer forensic information. Critical features of AFF include:
   - AFF allows you to store both computer forensic data and associated
     metadata in one or more files. 
 
-  - AFF allows files to be digital singed, to provide for
+  - AFF allows files to be digital signed, to provide for
     chain-of-custody and long-term file integrity.
 
   - AFF allows for forensic disk images to stored encrypted and
