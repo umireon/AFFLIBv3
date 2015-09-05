@@ -91,7 +91,7 @@ void bold(int on)
 #ifdef HAVE_ISATTY
     if(!isatty(fileno(stdout))) return;
 #endif
-#if defined(HAVE_TPUTS)
+#if defined(HAVE_TPUTS) && defined(HAVE_CURSES_H) && defined(HAVE_TERM_H)
     if(on) tputs(enter_bold_mode,1,putchar);
     else tputs(exit_attribute_mode,0,putchar);
 #endif
