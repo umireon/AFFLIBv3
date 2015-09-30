@@ -155,7 +155,7 @@ afflib.lib: $(LIB_OBJS)
 WIN32LIBS = ws2_32.lib advapi32.lib c:\openssl\lib\libeay32.lib
 
 clean:
-	del afflib.lib $(LIB_OBJS) $(TARGETS)
+	del afflib.lib $(LIB_OBJS) $(TARGETS) > NUL 2>&1
 
 LINK_OPTS = /libpath:$(SDK_DIR)/Lib /nodefaultlib:libc $(WIN32LIBS)
 
