@@ -538,26 +538,6 @@ int af_identify_file_type(const char *filename,int exists); // returns type of a
 const char *af_identify_file_name(const char *filename,int exists); // returns name of a file type;
 int split_raw_increment_fname (char *fn); /* exposed for testing in aftest */
 
-/* AFF implementation types returned by af_identify_type() and af_identify_name()*/
-
-#define AF_IDENTIFY_RAW 0		// file is a raw file
-#define AF_IDENTIFY_AFF 1		// file is an AFF file
-#define AF_IDENTIFY_AFD 2		// file is a directory of AFF files
-#define AF_IDENTIFY_EVF 3		// file is an EnCase file
-#define AF_IDENTIFY_EVD 4		// file is a .E01 file when there are more files following
-#define AF_IDENTIFY_SPLIT_RAW 5		// file is a split raw file
-#define AF_IDENTIFY_AFM 6               // file is raw file with metadata
-#define AF_IDENTIFY_EWF 7		// libewf; deprecated
-#define AF_IDENTIFY_S3  8		// is an s3:/// file
-#define AF_IDENTIFY_VMDK 9		// QEMU support for VMDK format
-#define AF_IDENTIFY_DMG 10		// QEMU support for Apple DMG format
-#define AF_IDENTIFY_SPARSEIMAGE 11	// QEMU support for Apple SPARSEIMAGE format
-
-
-#define AF_IDENTIFY_ERR -1		// error encountered on identify
-#define AF_IDENTIFY_NOEXIST -2		// file does not exist
-
-
 AFFILE *af_open_with(const char *filename,int flags,int mode, struct af_vnode *v);
 extern struct af_vnode *af_vnode_array[]; // array of filesystems; last is a "0"
 
@@ -635,7 +615,6 @@ int	af_get_page(AFFILE *af,int64_t pagenum,uint8_t *data,size_t *bytes);
  ****************************************************************/
 
 extern  int af_cache_debug;			 // sets level of verbosity */
-int	af_set_maxsize(AFFILE *af,int64_t size); // sets maximum AFF file size
 int	af_update_page(AFFILE *af,int64_t pagenum,uint8_t *data,int datalen);
 int	af_update_segf(AFFILE *af,const char *name,
 		       uint32_t arg,const uint8_t *value,uint32_t vallen,uint32_t sigflag);

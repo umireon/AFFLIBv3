@@ -233,6 +233,7 @@ uint64_t  af_tell(AFFILE *af);
 int	  af_eof(AFFILE *af);		// is the virtual file at the end?
 
 /* Additional routines for writing */
+int	af_set_maxsize(AFFILE *af,int64_t size); // sets maximum AFF file size
 void	af_set_callback(AFFILE *af, void (*cb)(struct affcallback_info *acbi));
 void	af_enable_compression(AFFILE *af,int type,int level); // set/gunset compression for writing
 int	af_compression_type(AFFILE *af);
@@ -246,6 +247,25 @@ const char *af_ext(const char *filename);	// return the extension of str includi
 int	    af_ext_is(const char *filename,const char *ext);
 const char *af_filename(AFFILE *af);	// returns the filename of an open stream.
 int	    af_identify(AFFILE *af);	// returns type of AFFILE pointer
+
+/* AFF implementation types returned by af_identify() and af_identify_file_type() */
+
+#define AF_IDENTIFY_RAW 0		// file is a raw file
+#define AF_IDENTIFY_AFF 1		// file is an AFF file
+#define AF_IDENTIFY_AFD 2		// file is a directory of AFF files
+#define AF_IDENTIFY_EVF 3		// file is an EnCase file
+#define AF_IDENTIFY_EVD 4		// file is a .E01 file when there are more files following
+#define AF_IDENTIFY_SPLIT_RAW 5		// file is a split raw file
+#define AF_IDENTIFY_AFM 6               // file is raw file with metadata
+#define AF_IDENTIFY_EWF 7		// libewf; deprecated
+#define AF_IDENTIFY_S3  8		// is an s3:/// file
+#define AF_IDENTIFY_VMDK 9		// QEMU support for VMDK format
+#define AF_IDENTIFY_DMG 10		// QEMU support for Apple DMG format
+#define AF_IDENTIFY_SPARSEIMAGE 11	// QEMU support for Apple SPARSEIMAGE format
+
+#define AF_IDENTIFY_ERR -1		// error encountered on identify
+#define AF_IDENTIFY_NOEXIST -2		// file does not exist
+
 
 /* Accessor Functions */
 int64_t af_get_imagesize(AFFILE *af);	// byte # of last mapped byte in image, or size of device;
