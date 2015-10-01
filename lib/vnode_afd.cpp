@@ -20,7 +20,7 @@
 #endif
 
 
-#if defined(WIN32) and !defined(HAVE__MINGW_H)
+#if defined(WIN32) && !defined(HAVE__MINGW_H)
 /**********************************************************************
  * Implement dirent-style opendir/readdir/rewinddir/closedir on Win32
  *

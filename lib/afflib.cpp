@@ -840,7 +840,7 @@ int af_update_segf(AFFILE *af, const char *segname,
     af->bytes_written += datalen;
 #ifdef HAVE_AES_ENCRYPT
     /* if we encrypted, make sure the unencrypted segment is deleted */
-    if(oldname) (*af->v->del_seg)(af,oldname);
+    if(oldname && af->v->del_seg) (*af->v->del_seg)(af,oldname);
     if(newdata){
 	free(newdata);		// free any allocated data
 	newdata = 0;
@@ -852,7 +852,7 @@ int af_update_segf(AFFILE *af, const char *segname,
     char encrypted_name[AF_MAX_NAME_LEN];
     strlcpy(encrypted_name,segname,sizeof(encrypted_name));
     strlcat(encrypted_name,AF_AES256_SUFFIX,sizeof(encrypted_name));
-    if(*af->v->del_seg) (*af->v->del_seg)(af,encrypted_name); // no need to check error return
+    if(af->v->del_seg) (*af->v->del_seg)(af,encrypted_name); // no need to check error return
 
 
     /* Sign the segment if:
