@@ -237,8 +237,8 @@ int aff_bom::add(AFFILE *af,const char *segname)
     size_t datalen = 0;
     if(af_get_seg(af,segname,0,0,&datalen)<0) return -1;
     uint32_t arg;
-    u_char *segdata = (u_char *)malloc(datalen);/* Allocate memory */
-    if(segdata<0) return -1;
+    u_char *segdata = (u_char *)malloc(datalen);
+    if(!segdata) return -1;
     if(af_get_seg(af,segname,&arg,segdata,&datalen)<0){
 	free(segdata);
 	return -1;
