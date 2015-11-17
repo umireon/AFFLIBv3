@@ -30,7 +30,6 @@ forensic information. Using these tools you can:
 
    - raw or "dd" 
    - splitraw (in which a single image is split between mulitple files)
-   - EnCase or "E01" format
    - AFF format (in which the entire disk image is stored in a single file.)
    - AFD format (in which a disk image is stored in mulitple AFF files
      stored in a single directory.)
