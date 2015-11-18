@@ -78,7 +78,7 @@ Use 'ext' for the raw \fIfiles\fP (default is raw). Implies in \fB-r\fP.
 .TP
 .B
 \fB-r\fP
-Force raw output.
+Generate raw output.
 .RE
 .PP
 Dangerous input \fIoptions\fP:
@@ -104,11 +104,26 @@ Convert file1.raw to file1.aff:
 
 .fam T
 .fi
+Convert file1.aff to file1.raw:
+.PP
+.nf
+.fam C
+    $ affconvert -r file1.aff
+
+.fam T
+.fi
 Batch convert \fIfiles\fP:
 .PP
 .nf
 .fam C
     $ affconvert file1.raw file2.raw file3.raw
+
+.fam T
+.fi
+.PP
+.nf
+.fam C
+    $ affconvert -r file1.aff file2.aff file3.aff
 
 .fam T
 .fi
