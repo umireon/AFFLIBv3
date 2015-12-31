@@ -13,7 +13,7 @@
  * United States Government and/or for any works created by United
  * States Government employees. User acknowledges that this software
  * contains work which was created by NPS employee(s) and is therefore
- * in the public domain and not subject to copyright.  
+ * in the public domain and not subject to copyright.
  * --------------------------------------------------------------------
  *
  * Change History:
@@ -97,7 +97,7 @@ char *aff_bom::get_notes()
     while(notes){
 	char buf2[1024];
 	char *val=0;
-	
+
 #ifdef HAVE_LIBREADLINE
 	if(isatty(fileno(stdin))){
 	    val = readline("");
@@ -120,10 +120,12 @@ char *aff_bom::get_notes()
 int aff_bom::read_files(const char *cert_file,const char *key_file)
 {
     BIO *bp_cert = BIO_new_file(cert_file,"r"); // read the certfile
+    if (!bp_cert)
+      return -1;
     PEM_read_bio_X509(bp_cert,&cert,0,0); // get an x509 cert
     BIO_free(bp_cert);
     if(!cert) return -1;		// can't read certificate file
-	
+
     /* Now read the private key */
     BIO *bp_privkey = BIO_new_file(key_file,"r");
     privkey = PEM_read_bio_PrivateKey(bp_privkey,0,0,0);
@@ -133,14 +135,14 @@ int aff_bom::read_files(const char *cert_file,const char *key_file)
 	cert = 0;
 	return -1;
     }
-	
+
     bom_open = true;
     xml = BIO_new(BIO_s_mem());	// where we are writing
     time_t clock = time(0);
     struct tm *tm = localtime(&clock);
     char timebuf[1024];
     strftime(timebuf,sizeof(timebuf),"<date type='ISO 8601'>%FT%T</date>",tm);
-    
+
     BIO_printf(xml,"<%s version=\"1\">\n",AF_XML_AFFBOM);
     BIO_printf(xml,"  %s\n",timebuf);
     BIO_printf(xml,"  <program>afcopy</program>\n");
@@ -185,18 +187,18 @@ void aff_bom::close()
 	size_t xlen = BIO_get_mem_data(xml,&xbuf);
 	unsigned char sig[1024];
 	u_int  siglen = sizeof(sig);
-	
+
 	EVP_MD_CTX md;
 	EVP_SignInit(&md,sha256);
 	EVP_SignUpdate(&md,xbuf,xlen);
 	EVP_SignFinal(&md,sig,&siglen,privkey);
-    
+
 	/* Write the signature in base64 encoding... */
 	BIO *b64 = BIO_new(BIO_f_base64());
 	xml = BIO_push(b64,xml);
 	BIO_write(xml,sig,siglen);
 	if(BIO_flush(xml)!=1) return;	// something wrong
-	
+
 	/* Remove the base64 bio */
 	xml = BIO_pop(b64);
     }
@@ -248,7 +250,7 @@ int aff_bom::add(AFFILE *af,const char *segname)
     add(segname,AF_SIGNATURE_MODE0,seghash,sizeof(seghash));
     free(segdata);
     return(0);
-    
+
 }
 
 
