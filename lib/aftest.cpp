@@ -764,6 +764,10 @@ void rsatest()
     uint32_t  siglen = sizeof(sig);
 
     BIO *bp = BIO_new_file("signing_key.pem","r");
+    if (!bp) {
+      perror("BIO_new_file");
+      return;
+    }
 
     EVP_MD_CTX md;
     EVP_PKEY *pkey = PEM_read_bio_PrivateKey(bp,0,0,0);
@@ -774,6 +778,11 @@ void rsatest()
 
     /* let's try to verify it */
     bp = BIO_new_file("signing_cert.pem","r");
+    if (!bp) {
+      perror("BIO_new_file");
+      return;
+    }
+
     X509 *x = 0;
     PEM_read_bio_X509(bp,&x,0,0);
     EVP_PKEY *pubkey = X509_get_pubkey(x);
