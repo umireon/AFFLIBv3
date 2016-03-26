@@ -24,10 +24,6 @@
 #include <unistd.h>
 #endif
 
-#ifdef HAVE_TERM_H
-#include <term.h>
-#endif
-
 #ifdef WIN32
 #include "unix4win32.h"
 #include <malloc.h>

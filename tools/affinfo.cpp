@@ -33,14 +33,6 @@
 
 using namespace std;
 
-#ifdef HAVE_CURSES_H
-#include <curses.h>
-#endif
-
-#ifdef HAVE_TERM_H
-#include <term.h>
-#endif
-
 #ifdef WIN32
 #include "unix4win32.h"
 #endif
@@ -79,46 +71,6 @@ const char *opt_passphrase = 0;
 
 vector<string> opt_seglist;		// just info these segments
 bool something_was_decrypted = false;
-const char *term = 0;
-
-
-/**
- * select bold on or off
- */
-void bold(int on)
-{
-    if(!term) return;
-#ifdef HAVE_ISATTY
-    if(!isatty(fileno(stdout))) return;
-#endif
-#if defined(HAVE_TPUTS) && defined(HAVE_CURSES_H) && defined(HAVE_TERM_H)
-    if(on) tputs(enter_bold_mode,1,putchar);
-    else tputs(exit_attribute_mode,0,putchar);
-#endif
-}
-
-/**
- * select a color.
- * @param num - 0 is black; 1 red; 2 green; 3 yellow; 4 blue; 5 magenta; 6 cyan; 7 white;
- */
-  
-#define RED 1
-#define WHITE 7
-
-void color(int num)
-{
-#ifdef HAVE_ISATTY
-    if(!isatty(fileno(stdout))) return;
-#endif
-#if defined(HAVE_TIGETSTR) && defined(HAVE_PUTP) && defined(HAVE_TPARM)
-    char *setf = tigetstr((char *)"setf");
-    if(!setf) setf = tigetstr((char *)"setaf");
-    if(setf){
-	putp(tparm(setf,num));
-    }
-#endif
-}
-
 
 void usage()
 {
@@ -163,12 +115,6 @@ void usage()
     printf("    HAVE_LIBEXPAT ");
 #endif
     printf("\n");
-
-    if(opt_debug){
-	for(int i=0;i<9;i++){
-	    color(i);printf("Color %d\n",i);color(7);
-	}
-    }
 
     exit(0);
 }
@@ -408,7 +354,6 @@ void print_info(AFFILE *af,const char *segname)
     af_set_option(af,AF_OPTION_AUTO_DECRYPT,prev);    
 
     if(was_decrypted){
-	bold(1);
 	something_was_decrypted = true;	// print key at bottom
     }
 
@@ -552,9 +497,6 @@ void print_info(AFFILE *af,const char *segname)
     putchar('\n');
  done:
     if(data) free(data);
-    bold(0);			// make sure bold is off
-
-    //color(WHITE);		// make sure we are back to normal color
 }
 
 
@@ -666,9 +608,7 @@ int info_file(const char *infile)
 
     /* Print the key */
     if(something_was_decrypted){
-	bold(1);
-	printf("Bold indicates segments that were decrypted.\n");
-	bold(0);
+	printf("Some segments were decrypted.\n");
     }
 
 

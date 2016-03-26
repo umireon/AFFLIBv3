@@ -22,15 +22,6 @@
 #include "unix4win32.h"
 #endif
 
-#ifdef HAVE_CURSES_H
-#include <curses.h>
-#endif
-
-#ifdef HAVE_TERM_H
-#include <term.h>
-#endif
-
-
 #ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
 #endif
