@@ -439,7 +439,7 @@ int convert(const char *infile,char *outfile)
 	/* Go back and update the image size (necessary since I have been writing page-by-page) */
 	if(af_update_segq(a_out,AF_IMAGESIZE,last_byte_in_image)
 	   && errno!=ENOTSUP){
-	    err(1,"Could not upate AF_IMAGESIZE");
+	    err(1,"Could not update AF_IMAGESIZE");
 	}
     } else {
 	/* No page support; Copy from beginning to end */

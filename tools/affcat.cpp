@@ -117,7 +117,7 @@ int output_page(AFFILE *af,FILE *outfile,int64_t pagenum)
 	}
     }
 
-    if(opt_debug) fprintf(stderr,"  outputing %d bytes\n",bytes);
+    if(opt_debug) fprintf(stderr,"  outputting %d bytes\n",bytes);
     int count = fwrite(buf,1,bytes,outfile);	// send to the output
     if(count!=bytes) fprintf(stderr,"fwrite(buf,1,%d,outfile) only wrote %d bytes\n",bytes,count);
     free(buf);
