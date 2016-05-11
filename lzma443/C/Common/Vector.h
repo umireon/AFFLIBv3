@@ -178,7 +178,7 @@ public:
     for(int i = 0; i < Size(); i++)
       if (item == (*this)[i])
         return i;
-      return -1;
+    return -1;
   }
   int FindInSorted(const T& item) const
   {

@@ -417,7 +417,7 @@ public:
     for(int i = 0; i < _length; i++)
       if (s.Find(_chars[i]) >= 0)
         return i;
-      return -1;
+    return -1;
   }
 
   void TrimLeft(T c)

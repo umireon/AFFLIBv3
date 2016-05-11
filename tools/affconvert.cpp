@@ -414,7 +414,7 @@ int convert(const char *infile,char *outfile)
 	    
 	    int64_t pagenum = *i;
 	    
-	    if(!opt_quiet) printf("Converting page %" I64d " of %" I64d "\r",pagenum,highest_pagenum);fflush(stdout);
+	    if(!opt_quiet) { printf("Converting page %" I64d " of %" I64d "\r",pagenum,highest_pagenum); fflush(stdout); }
 	    
 	    size_t data_len = image_pagesize;
 	    if(af_get_page(a_in,pagenum,data,&data_len)){
