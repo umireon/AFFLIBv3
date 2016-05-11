@@ -29,14 +29,14 @@ int af_set_maxsize(AFFILE *af,int64_t maxsize)
 {
     AF_WRLOCK(af);
     if(af->image_size>0){
-	(*af->error_reporter)("Cannot set maxsize as imagesize is already set (%"I64d")",af->image_size);
+	(*af->error_reporter)("Cannot set maxsize as imagesize is already set (%" I64d ")",af->image_size);
 	AF_UNLOCK(af);
 	return -1;	// now allowed to set if imagesize is bigger than 0
     }
     if((af->image_pagesize!=0)
        && (af->v->type & AF_VNODE_MAXSIZE_MULTIPLE)
        && (maxsize % af->image_pagesize != 0)){
-	(*af->error_reporter)("Cannot set maxsize to %"I64d" --- not multiple of pagesize=%d\n",
+	(*af->error_reporter)("Cannot set maxsize to %" I64d " --- not multiple of pagesize=%d\n",
 			      maxsize,af->image_pagesize);
 	AF_UNLOCK(af);
 	return -1;
@@ -83,7 +83,7 @@ extern "C" ASIZE af_read(AFFILE *af,unsigned char *buf,ASIZE count)
     int total = 0;
 
     AF_WRLOCK(af);			// wrlock because cache may change
-    if (af_trace) fprintf(af_trace,"af_read(%p,%p,%d) (pos=%"I64d")\n",af,buf,(int)count,af->pos);
+    if (af_trace) fprintf(af_trace,"af_read(%p,%p,%d) (pos=%" I64d ")\n",af,buf,(int)count,af->pos);
     if (af->v->read){			// check for bypass
 	int r = (af->v->read)(af, buf, af->pos, count);
 	if(r>0) af->pos += r;
@@ -162,7 +162,7 @@ int af_write(AFFILE *af,unsigned char *buf,size_t count)
 {
     AF_WRLOCK(af);
     if (af_trace){
-	fprintf(af_trace,"af_write(af=%p,buf=%p,count=%d) pos=%"I64d"\n", af,buf,(int)count,af->pos);
+	fprintf(af_trace,"af_write(af=%p,buf=%p,count=%d) pos=%" I64d "\n", af,buf,(int)count,af->pos);
     }
     /* Invalidate caches */
     af_invalidate_vni_cache(af);

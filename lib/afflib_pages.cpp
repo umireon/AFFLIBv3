@@ -168,7 +168,7 @@ int af_get_page(AFFILE *af,int64_t pagenum,unsigned char *data,size_t *bytes)
     size_t page_len=0;
 
     if (af_trace){
-	fprintf(af_trace,"af_get_page(%p,pagenum=%"I64d",buf=%p,bytes=%u)\n",af,pagenum,data,(int)*bytes);
+	fprintf(af_trace,"af_get_page(%p,pagenum=%" I64d ",buf=%p,bytes=%u)\n",af,pagenum,data,(int)*bytes);
     }
 
     /* Find out the size of the segment and if it is compressed or not.
@@ -247,17 +247,17 @@ int af_get_page(AFFILE *af,int64_t pagenum,unsigned char *data,size_t *bytes)
 	    case Z_OK:
 		break;
 	    case Z_ERRNO:
-		(*af->error_reporter)("Z_ERRNOR decompressing segment %"I64d,pagenum);
+		(*af->error_reporter)("Z_ERRNOR decompressing segment %" I64d,pagenum);
 	    case Z_STREAM_ERROR:
-		(*af->error_reporter)("Z_STREAM_ERROR decompressing segment %"I64d,pagenum);
+		(*af->error_reporter)("Z_STREAM_ERROR decompressing segment %" I64d,pagenum);
 	    case Z_DATA_ERROR:
-		(*af->error_reporter)("Z_DATA_ERROR decompressing segment %"I64d,pagenum);
+		(*af->error_reporter)("Z_DATA_ERROR decompressing segment %" I64d,pagenum);
 	    case Z_MEM_ERROR:
-		(*af->error_reporter)("Z_MEM_ERROR decompressing segment %"I64d,pagenum);
+		(*af->error_reporter)("Z_MEM_ERROR decompressing segment %" I64d,pagenum);
 	    case Z_BUF_ERROR:
-		(*af->error_reporter)("Z_BUF_ERROR decompressing segment %"I64d,pagenum);
+		(*af->error_reporter)("Z_BUF_ERROR decompressing segment %" I64d,pagenum);
 	    case Z_VERSION_ERROR:
-		(*af->error_reporter)("Z_VERSION_ERROR decompressing segment %"I64d,pagenum);
+		(*af->error_reporter)("Z_VERSION_ERROR decompressing segment %" I64d,pagenum);
 	    default:
 		(*af->error_reporter)("uncompress returned an invalid value in get_segment");
 	    }
@@ -266,13 +266,13 @@ int af_get_page(AFFILE *af,int64_t pagenum,unsigned char *data,size_t *bytes)
 #ifdef USE_LZMA
 	case AF_PAGE_COMP_ALG_LZMA:
 	    res = lzma_uncompress(data,bytes,compressed_data,compressed_data_len);
-	    if (af_trace) fprintf(af_trace,"   LZMA decompressed page %"I64d". %d bytes => %u bytes\n",
+	    if (af_trace) fprintf(af_trace,"   LZMA decompressed page %" I64d ". %d bytes => %u bytes\n",
 				  pagenum,(int)compressed_data_len,(int)*bytes);
 	    switch(res){
 	    case 0:break;		// OK
-	    case 1:(*af->error_reporter)("LZMA header error decompressing segment %"I64d"\n",pagenum);
+	    case 1:(*af->error_reporter)("LZMA header error decompressing segment %" I64d "\n",pagenum);
 		break;
-	    case 2:(*af->error_reporter)("LZMA memory error decompressing segment %"I64d"\n",pagenum);
+	    case 2:(*af->error_reporter)("LZMA memory error decompressing segment %" I64d "\n",pagenum);
 		break;
 	    }
 	    break;
@@ -553,7 +553,7 @@ int af_cache_flush(AFFILE *af)
 		ret = -1;		// got an error; keep going, though
 	    }
 	    p->pagebuf_dirty = 0;
-	    if(af_trace) fprintf(af_trace,"af_cache_flush: slot %d page %"PRIu64" flushed.\n",i,p->pagenum);
+	    if(af_trace) fprintf(af_trace,"af_cache_flush: slot %d page %" PRIu64 " flushed.\n",i,p->pagenum);
 	}
     }
     return ret;				// now return the error that I might have gotten
@@ -570,7 +570,7 @@ void af_cache_writethrough(AFFILE *af,int64_t pagenum,const unsigned char *buf,i
 	struct aff_pagebuf *p = &af->pbcache[i];
 	if(p->pagenum_valid && p->pagenum == pagenum){
 	    if(p->pagebuf_dirty){
-		(*af->error_reporter)("af_cache_writethrough: overwriting page %"I64u".\n",pagenum);
+		(*af->error_reporter)("af_cache_writethrough: overwriting page %" I64u ".\n",pagenum);
 		exit(-1);		// this shouldn't happen
 	    }
 	    memcpy(p->pagebuf,buf,bufflen);
@@ -593,7 +593,7 @@ void af_cache_writethrough(AFFILE *af,int64_t pagenum,const unsigned char *buf,i
 
 struct aff_pagebuf *af_cache_alloc(AFFILE *af,int64_t pagenum)
 {
-    if(af_trace) fprintf(af_trace,"af_cache_alloc(%p,%"I64d")\n",af,pagenum);
+    if(af_trace) fprintf(af_trace,"af_cache_alloc(%p,%" I64d ")\n",af,pagenum);
 
     /* Make sure nothing in the cache is dirty */
     if(af_cache_flush(af) < 0)
@@ -604,7 +604,7 @@ struct aff_pagebuf *af_cache_alloc(AFFILE *af,int64_t pagenum)
 	struct aff_pagebuf *p = &af->pbcache[i];
 	if(p->pagenum_valid && p->pagenum==pagenum){
 	    af->cache_hits++;
-	    if(af_trace) fprintf(af_trace,"  page %"I64d" satisfied fromcache\n",pagenum);
+	    if(af_trace) fprintf(af_trace,"  page %" I64d " satisfied fromcache\n",pagenum);
 	    p->last = cachetime++;
 	    return p;
 	}
@@ -617,7 +617,7 @@ struct aff_pagebuf *af_cache_alloc(AFFILE *af,int64_t pagenum)
 	struct aff_pagebuf *p = &af->pbcache[i];
 	if(p->pagenum_valid==0){
 	    slot = i;
-	    if(af_trace) fprintf(af_trace,"  slot %d given to page %"I64d"\n",slot,pagenum);
+	    if(af_trace) fprintf(af_trace,"  slot %d given to page %" I64d "\n",slot,pagenum);
 	    break;
 	}
     }
@@ -632,7 +632,7 @@ struct aff_pagebuf *af_cache_alloc(AFFILE *af,int64_t pagenum)
 	    }
 	}
 	slot = oldest_i;
-	if(af_trace) fprintf(af_trace,"  slot %d assigned to page %"I64d"\n",slot,pagenum);
+	if(af_trace) fprintf(af_trace,"  slot %d assigned to page %" I64d "\n",slot,pagenum);
     }
     /* take over this slot */
     struct aff_pagebuf *p = &af->pbcache[slot];
@@ -656,7 +656,7 @@ struct aff_pagebuf *af_cache_alloc(AFFILE *af,int64_t pagenum)
     if(af_trace){
 	fprintf(af_trace,"   current pages in cache: ");
 	for(int i=0;i<af->num_pbufs;i++){
-	    fprintf(af_trace," %"I64d,af->pbcache[i].pagenum);
+	    fprintf(af_trace," %" I64d,af->pbcache[i].pagenum);
 	}
 	fprintf(af_trace,"\n");
     }

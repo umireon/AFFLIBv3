@@ -97,7 +97,7 @@ uint64_t random64()
 uint64_t atoi64(const char *buf)
 {
     uint64_t ret=0;
-    sscanf(buf,"%"PRIu64,&ret);
+    sscanf(buf,"%" PRIu64,&ret);
     return ret;
 }
 
@@ -201,7 +201,7 @@ int diskprint(const char *infile)
     int64_t imagesize = af_get_imagesize(af);
     if(imagesize>0){
 	char buf[32];
-	snprintf(buf,sizeof(buf),"%"PRIu64,imagesize);
+	snprintf(buf,sizeof(buf),"%" PRIu64,imagesize);
 	out_xmlstr(cout,2,AF_IMAGESIZE,buf);
 	cout << "\n";
     }
@@ -212,7 +212,7 @@ int diskprint(const char *infile)
     int64_t sectors = imagesize/sectorsize;
     if(sectors>0){
 	char buf[32];
-	snprintf(buf,sizeof(buf),"%"PRIu32"",sectorsize);
+	snprintf(buf,sizeof(buf),"%" PRIu32,sectorsize);
 	out_xmlstr(cout,2,AF_SECTORSIZE,buf);
 	cout << "\n";
     }

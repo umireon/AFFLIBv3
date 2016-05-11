@@ -169,7 +169,7 @@ void srp_dump(AFFILE *af)
 {
     struct split_raw_private *srp = SPLIT_RAW_PRIVATE(af);
     for(uint32_t i=0;i<srp->num_raw_files;i++){
-	fprintf(stderr,"   fds[%d]=%d   pos[%d]=%"I64d"\n",i,srp->fds[i],i,srp->pos[i]);
+	fprintf(stderr,"   fds[%d]=%d   pos[%d]=%" I64d "\n",i,srp->fds[i],i,srp->pos[i]);
     }
     srp_validate(af);
     fprintf(stderr,"===================\n");
@@ -287,7 +287,7 @@ static int split_raw_open(AFFILE *af)
 	af->image_pagesize *= 2;
 
     if ((ret == 0) && (af->maxsize % af->image_pagesize!=0)) {
-	(*af->error_reporter)("split_raw_open: %s: raw_file_size (%"I64d" not a multiple of pagesize %lu\n",
+	(*af->error_reporter)("split_raw_open: %s: raw_file_size (%" I64d " not a multiple of pagesize %lu\n",
 			      af->fname, af->maxsize,af->image_pagesize);
 	split_raw_close (af);
 	return -1;

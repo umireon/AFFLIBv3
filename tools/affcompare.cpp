@@ -153,10 +153,10 @@ void print_sector(AFFILE *af,unsigned char *buf)
 void print_info(char dir,const char *segname,uint32_t arg,size_t len,
 		unsigned char *data,int mcr)
 {
-    printf("    %c %s arg=%"PRIu32" len=%d\n",dir,segname,arg,(int)len);
+    printf("    %c %s arg=%" PRIu32 " len=%d\n",dir,segname,arg,(int)len);
     printf("          ");
     if((arg == AF_SEG_QUADWORD) && (len==8)){
-	printf("data=%"I64d" as a 64-bit value\n",af_decode_q(data));
+	printf("data=%" I64d " as a 64-bit value\n",af_decode_q(data));
 	return;
     }
     /* Otherwise, just print some stuff... */
@@ -290,17 +290,17 @@ int  compare_aff_data_segments(char *title,AFFILE *af1,AFFILE *af2,int64_t pagen
 
     /* Find the size of each page, then get the page */
     if(af_get_page(af1,pagenum,0,&data1_len)<0)
-	err(1,"Cannot read page %"I64d" size from %s\n",pagenum,af_filename(af1));
+	err(1,"Cannot read page %" I64d " size from %s\n",pagenum,af_filename(af1));
     if(af_get_page(af1,pagenum,data1,&data1_len)<0)
-	err(1,"Cannot read page %"I64d" from %s",pagenum,af_filename(af1));
+	err(1,"Cannot read page %" I64d " from %s",pagenum,af_filename(af1));
 
     if(af_get_page(af2,pagenum,0,&data2_len)<0)
-	err(1,"Cannot read page %"I64d" size from %s\n",pagenum,af_filename(af2));
+	err(1,"Cannot read page %" I64d " size from %s\n",pagenum,af_filename(af2));
     if(af_get_page(af2,pagenum,data2,&data2_len)<0)
-	err(1,"Cannot read page %"I64d" from %s",pagenum,af_filename(af2));
+	err(1,"Cannot read page %" I64d " from %s",pagenum,af_filename(af2));
 
     if(data1_len != data2_len){
-	printf("page %"I64d" size %d != size %d\n",pagenum,(int)data1_len,(int)data2_len);
+	printf("page %" I64d " size %d != size %d\n",pagenum,(int)data1_len,(int)data2_len);
 	return 1;
     }
 
@@ -341,7 +341,7 @@ int  compare_aff_data_segments(char *title,AFFILE *af1,AFFILE *af2,int64_t pagen
     outline[0] = 0;
     if(opt_all || (no_match>0) || af1_bad || af2_bad){
 	snprintf(outline,sizeof(outline),
-		"   page%"I64d" sectors:%4d  matching: %3d  different:%3d",
+		"   page%" I64d " sectors:%4d  matching: %3d  different:%3d",
 		pagenum,total_sectors,matching_sectors,no_match);
     }
     if(af1_bad){
@@ -373,7 +373,7 @@ int  compare_aff_data_segments(char *title,AFFILE *af1,AFFILE *af2,int64_t pagen
 	    if(i==0){
 		printf("\n   ");
 	    }
-	    printf(" %"I64d,*j);
+	    printf(" %" I64d,*j);
 	    i = (i+1) % 10;
 	}
 	putchar('\n');
@@ -391,7 +391,7 @@ int  compare_aff_data_segments(char *title,AFFILE *af1,AFFILE *af2,int64_t pagen
 	    memcpy(b2,data1+offset,16);
 	    b2[15]=0;
 
-	    printf("===  sector %"I64d" (offset=%d) ===\n",*j,offset);
+	    printf("===  sector %" I64d " (offset=%d) ===\n",*j,offset);
 	    printf("   %s:\n",af_filename(af1));
 	    print_sector(af1,data1+offset);
 	    printf("-------------------------------------\n");
@@ -429,10 +429,10 @@ int compare_preen(AFFILE *af1,AFFILE *af2)
 	size_t len1,len2;
 
 	if(af_get_page_raw(af1,*i,&arg1,0,&len1)){
-	    err(1,"Could not read page %"I64d" in file %s\n",*i,af_filename(af1));
+	    err(1,"Could not read page %" I64d " in file %s\n",*i,af_filename(af1));
 	}
 	if(af_get_page_raw(af2,*i,&arg2,0,&len2)){
-	    err(1,"Page %"I64d" is in file %s but not in %s\n",*i,af_filename(af1),
+	    err(1,"Page %" I64d " is in file %s but not in %s\n",*i,af_filename(af1),
 		af_filename(af2));
 	}
 	if(arg1==arg2 && len1==len2){
@@ -450,7 +450,7 @@ int compare_preen(AFFILE *af1,AFFILE *af2)
 	    continue;
 	}
     }
-    printf("%s -> %s Nochg: %d  NUL: %d  LZMA: %d  old: %"I64d" new: %"I64d" LZred: %6.2f%%\n",
+    printf("%s -> %s Nochg: %d  NUL: %d  LZMA: %d  old: %" I64d " new: %" I64d " LZred: %6.2f%%\n",
 	   af_filename(af1),
 	   af_filename(af2),
 	   comp_unchanged,comp_zero,comp_lzma,bytes_old,bytes_new,(bytes_old-bytes_new)*100.0/bytes_old);
@@ -492,8 +492,8 @@ int compare_aff_aff(const char *file1,const char *file2)
     if(af1->image_pagesize != af2->image_pagesize){
 	fprintf(stderr,"Currently, %s requires that both images have the "
 		"same image datsegsize.\n"
-		"  pagesize(%s)=%"PRIu32"\n"
-		"  pagesize(%s)=%"PRIu32"\n",
+		"  pagesize(%s)=%" PRIu32 "\n"
+		"  pagesize(%s)=%" PRIu32 "\n",
 		progname,file1,af1->image_pagesize, file2,af2->image_pagesize);
 	fprintf(stderr,"Data segments will be ignored.\n");
 	no_data_segments = true;
@@ -502,8 +502,8 @@ int compare_aff_aff(const char *file1,const char *file2)
     if(af1->image_sectorsize != af2->image_sectorsize){
 	fprintf(stderr,"Currently, %s requires that both images have the "
 		"same image sectorsize.\n"
-		"  sectorsize(%s)=%"PRIu32"\n"
-		"  sectorsize(%s)=%"PRIu32"\n",
+		"  sectorsize(%s)=%" PRIu32 "\n"
+		"  sectorsize(%s)=%" PRIu32 "\n",
 		progname,file1,af1->image_sectorsize, file2,af2->image_sectorsize);
 	fprintf(stderr,"Data segments will be ignored.\n");
 	no_data_segments = true;

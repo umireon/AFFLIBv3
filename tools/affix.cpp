@@ -89,7 +89,7 @@ int fix(const char *infile)
     r = (*af->v->open)(af);
     /* See if we can build a TOC */
     if(r<0){
-	printf("AFF file corrupt at %"I64d" out of %"I64d" (%"I64d" bytes from end)\n",
+	printf("AFF file corrupt at %" I64d " out of %" I64d " (%" I64d " bytes from end)\n",
 	       ftello(af->aseg),(int64_t)len,len-ftello(af->aseg));
 	if(opt_fix){
 	    printf("Truncating... %d \n",fileno(af->aseg));

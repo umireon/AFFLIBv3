@@ -455,7 +455,7 @@ int af_close(AFFILE *af)
 uint64_t af_seek(AFFILE *af,int64_t pos,int whence)
 {
     AF_WRLOCK(af);
-    if(af_trace) fprintf(af_trace,"af_seek(%p,%"I64d",%d)\n",af,pos,whence);
+    if(af_trace) fprintf(af_trace,"af_seek(%p,%" I64d ",%d)\n",af,pos,whence);
     uint64_t new_pos=0;
     switch(whence){
     case SEEK_SET:
@@ -788,7 +788,7 @@ int af_rewind_seg(AFFILE *af)
 int af_update_segf(AFFILE *af, const char *segname,
 		  uint32_t arg,const u_char *data,uint32_t datalen,uint32_t flag)
 {
-    if(af_trace) fprintf(af_trace,"af_update_segf(%p,segname=%s,arg=%"PRIu32",datalen=%d)\n",
+    if(af_trace) fprintf(af_trace,"af_update_segf(%p,segname=%s,arg=%" PRIu32 ",datalen=%d)\n",
 			 af,segname,arg,datalen);
     AF_WRLOCK(af);
     if(af->v->update_seg==0){
@@ -954,13 +954,13 @@ void af_stats(AFFILE *af,FILE *f)
 {
     AF_READLOCK(af);
     fprintf(f,"AFSTATS for %s\n",af_filename(af));
-    fprintf(f,"Pages read: %"I64u"\n",af->pages_read);
-    fprintf(f,"Pages written: %"I64u"\n",af->pages_written);
-    fprintf(f,"Pages compressed: %"I64u"\n",af->pages_compressed);
-    fprintf(f,"Pages decompressed: %"I64u"\n",af->pages_decompressed);
-    fprintf(f,"Cache hits: %"I64u"\n",af->cache_hits);
-    fprintf(f,"Cache misses: %"I64u"\n",af->cache_misses);
-    fprintf(f,"Bytes copied: %"I64u"\n",af->bytes_memcpy);
+    fprintf(f,"Pages read: %" I64u "\n",af->pages_read);
+    fprintf(f,"Pages written: %" I64u "\n",af->pages_written);
+    fprintf(f,"Pages compressed: %" I64u "\n",af->pages_compressed);
+    fprintf(f,"Pages decompressed: %" I64u "\n",af->pages_decompressed);
+    fprintf(f,"Cache hits: %" I64u "\n",af->cache_hits);
+    fprintf(f,"Cache misses: %" I64u "\n",af->cache_misses);
+    fprintf(f,"Bytes copied: %" I64u "\n",af->bytes_memcpy);
     AF_UNLOCK(af);
 }
 

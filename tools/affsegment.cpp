@@ -230,19 +230,19 @@ void process(const char *fn)
 		free(buf);
 		continue;
 	    }
-	    if(opt_debug) fprintf(stderr," arg=%"PRIu32" len=%zd\n",arg,len);
+	    if(opt_debug) fprintf(stderr," arg=%" PRIu32 " len=%zd\n",arg,len);
 	    int p = 1;
 	    
 	    if(filecount>1) printf("%s:",fn);
 	    if(print_segs.size()>1) printf("%s=",segname);
 	    if(opt_quad && len==8){
 		uint64_t quad = af_decode_q(buf);
-		printf("%"I64u"\n",quad);
+		printf("%" I64u "\n",quad);
 		p = 0;
 	    }
 	    
 	    if(opt_arg){
-		printf("%"PRIu32"\n",arg);
+		printf("%" PRIu32 "\n",arg);
 		p = 0;
 	    }
 	    

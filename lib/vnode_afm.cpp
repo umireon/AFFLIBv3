@@ -187,7 +187,7 @@ static int afm_split_raw_setup(AFFILE *af)
 	    return -1;
 	}
 	if (af->maxsize % af->image_pagesize) {
-	    (*af->error_reporter)("afm_split_raw_setup: maxsize (%"I64d") "
+	    (*af->error_reporter)("afm_split_raw_setup: maxsize (%" I64d ") "
 				  "not a multiple of image_pagesize (%d)\n",
 				  af->maxsize,af->image_pagesize);
 	    return -1;
@@ -212,7 +212,7 @@ static int afm_split_raw_setup(AFFILE *af)
      */
     if (ap->aff->image_size && ap->aff->image_size != ap->sr->image_size) {
 	(*af->error_reporter)("afm_split_raw_setup: internal error. "
-			      "AFF image_size %"I64d" != SR image_size %"I64d"\n",
+			      "AFF image_size %" I64d " != SR image_size %" I64d "\n",
 			      ap->aff->image_size,ap->sr->image_size);
 	return -1;
     }
@@ -225,7 +225,7 @@ static int afm_split_raw_setup(AFFILE *af)
     /* Verify that the parameters make sense */
     if (ap->sr->maxsize != (pages_per_file * af->image_pagesize) && pages_per_file>0) {
 	(*af->error_reporter)("afm_split_raw_setup: %s: per size indicated by metadata (%d * %d) "
-			      "doesn't match maxsize (%"I64d")\n",
+			      "doesn't match maxsize (%" I64d ")\n",
 			      af_filename(af),pages_per_file,af->image_pagesize,ap->sr->maxsize);
 	return -1;
     }

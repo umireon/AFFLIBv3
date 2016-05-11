@@ -29,7 +29,7 @@ void	aff_toc_print(AFFILE *af)
     printf("AF DIRECTORY:\n");
     for(int i=0;i<af->toc_count;i++){
 	if(af->toc[i].name){
-	    printf("%-32s @%"I64u" len: %"I64u" \n",af->toc[i].name, af->toc[i].offset,af->toc[i].segment_len);
+	    printf("%-32s @%" I64u " len: %" I64u " \n",af->toc[i].name, af->toc[i].offset,af->toc[i].segment_len);
 	}
     }
 }

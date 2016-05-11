@@ -50,7 +50,7 @@ int af_probe_next_seg(AFFILE *af,
     uint32_t name_len = ntohl(segh.name_len);
     uint32_t datasize = ntohl(segh.data_len);
     if(name_len>AF_MAX_NAME_LEN){
-	snprintf(af->error_str,sizeof(af->error_str),"afflib: name_len=%"PRIu32" (an outrageous value)",name_len);
+	snprintf(af->error_str,sizeof(af->error_str),"afflib: name_len=%" PRIu32 " (an outrageous value)",name_len);
 	return AF_ERROR_NAME;
     }
 

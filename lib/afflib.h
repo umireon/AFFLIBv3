@@ -406,7 +406,7 @@ int af_hash_verify_seg2(AFFILE *af,const char *segname,unsigned char *sigbuf_,si
 #define AF_SECTORSIZE	"sectorsize"	// in bytes, stored in arg
 #define AF_DEVICE_SECTORS "devicesectors"// stored as a 64-bit number
 #define AF_BADFLAG      "badflag"	// data used to mark a bad sector
-#define AF_PAGE		"page%"I64d	// segment flag indicates compression (replaces seg%d)
+#define AF_PAGE		"page%" I64d	// segment flag indicates compression (replaces seg%d)
 #define AF_PAGE_MD5	AF_PAGE"_md5"	// md5 hash of page
 #define AF_PAGE_SHA1	AF_PAGE"_sha1"	// sha1 hash of page
 #define AF_PAGE_SHA256	AF_PAGE"_sha256"// sha256 hash of page
@@ -428,7 +428,7 @@ int af_hash_verify_seg2(AFFILE *af,const char *segname,unsigned char *sigbuf_,si
 #define AF_BOM_SEG "affbom%d"
 
 /* Deprecated terminology; pages were originally called data segments */
-#define AF_SEG_D        "seg%"I64d	// segment flag indicates compression (deprecated)
+#define AF_SEG_D        "seg%" I64d	// segment flag indicates compression (deprecated)
 #define AF_SEGSIZE_D	"segsize"	// segment data size (deprecated)
 
 /* Bill of Materials */

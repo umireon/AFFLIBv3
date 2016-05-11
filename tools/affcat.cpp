@@ -61,7 +61,7 @@ void sig_info(int arg)
 {
     fprintf(stderr,"affcat ");
     if(current_fname) fprintf(stderr,"%s: ",current_fname);
-    if(current_page>=0) fprintf(stderr,"[%"PRId64"] ",current_page);
+    if(current_page>=0) fprintf(stderr,"[%" PRId64 "] ",current_page);
     fflush(stderr);
 }
 
@@ -99,12 +99,12 @@ int output_page(AFFILE *af,FILE *outfile,int64_t pagenum)
     int bytes = af_read(af,buf,af->image_pagesize); // read what we can
 
     if(bytes<0){
-	if(opt_debug) fprintf(stderr,"affcat: cannot read page %"I64d"\n",pagenum);
+	if(opt_debug) fprintf(stderr,"affcat: cannot read page %" I64d "\n",pagenum);
 	return -1;
     }
 
     if(opt_debug){
-	fprintf(stderr,"affcat: page:%"I64d" bytes: %d offset:%"I64d"\n",
+	fprintf(stderr,"affcat: page:%" I64d" bytes: %d offset:%" I64d "\n",
 		pagenum, bytes,offset);
     }
 
@@ -196,7 +196,7 @@ int affcat(AFFILE *af)
 	    const char *opt = opts.c_str();
 	    uint64_t offset=0;
 	    int count=0;
-	    if(sscanf(opt,"%"I64u":%d",&offset,&count)!=2){
+	    if(sscanf(opt,"%" I64u ":%d",&offset,&count)!=2){
 		err(1,"Cannot decode '%s'\n",opt);
 	    }
 	    af_seek(af,offset,SEEK_SET);
@@ -227,7 +227,7 @@ int affcat(AFFILE *af)
 	if(opt_list){
 	    printf("%s",segname);
 	    if(opt_list_long){
-		printf("\targ:%"PRIu32"\tlen:%d",arg,(int)datalen);
+		printf("\targ:%" PRIu32 "\tlen:%d",arg,(int)datalen);
 	    }
 	    putchar('\n');
 	}
@@ -270,7 +270,7 @@ int affcat(AFFILE *af)
 
 	//fprintf(stderr,"bytes written=%qd imagesize=%qd\n",total_bytes_written,imagesize);
 	if((total_bytes_written > imagesize) && (imagesize>0)){
-	    err(1,"affcat internal error. bytes written=%"I64d" imagesize=%" I64d,
+	    err(1,"affcat internal error. bytes written=%" I64d " imagesize=%" I64d,
 		(int64_t)total_bytes_written,
 		(int64_t)imagesize);
 	    return -1;
@@ -284,7 +284,7 @@ int64_t atoi64(const char *buf)
 {
     int64_t r=0;
     char ch;
-    if(sscanf(buf,"%"I64d"%c",&r,&ch)==1) return r;
+    if(sscanf(buf,"%" I64d "%c",&r,&ch)==1) return r;
     fprintf(stderr,"Cannot parse '%s'\n",buf);
     exit(0);
 }

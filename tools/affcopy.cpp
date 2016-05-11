@@ -465,7 +465,7 @@ int affcopy(char *infile,vector<string> &outfiles)
 	AFFILE *af = afouts.begin()->af;
 	uint64_t w = af->bytes_written;
 	double sec = ((t1.tv_sec-t0.tv_sec)+(t1.tv_usec-t0.tv_usec)/1000000.0);
-	printf("%s: %"I64d" bytes transferred in %.2f seconds. xfer rate: %.2f MBytes/sec\n",
+	printf("%s: %" I64d " bytes transferred in %.2f seconds. xfer rate: %.2f MBytes/sec\n",
 	       af_filename(af),w,sec,(w/1000000.0) / sec);
     }
 	

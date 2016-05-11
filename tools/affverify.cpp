@@ -451,7 +451,7 @@ int hash_verify(AFFILE *af)
     printf("\n");
     do {
 	double frac = (double)total_read / af_get_imagesize(af);
-	printf("  Read %14zd/%14"PRId64" bytes; done in %s\n",
+	printf("  Read %14zd/%14" PRId64" bytes; done in %s\n",
 	       total_read,
 	       af_get_imagesize(af),
 	       t.eta_text(frac).c_str());

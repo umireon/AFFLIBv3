@@ -94,7 +94,7 @@ void print_size(uint64_t s)
 	printf("%u",(unsigned int)(s/(1024*1024)));
 	return;
     }
-    printf("%"I64u,s);    
+    printf("%" I64u,s);    
 }
 
 void affstats_title()
@@ -146,7 +146,7 @@ void affstats(const char *fname)
     print_size(compressed_bytes);
     printf("\t");
     print_size(uncompressed_bytes);
-    printf(" %"I64d" %"I64d,blanksectors,badsectors);
+    printf(" %" I64d " %" I64d,blanksectors,badsectors);
     putchar('\n');
     
     

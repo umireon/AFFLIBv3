@@ -125,7 +125,7 @@ AFFILE *af=0;
 void sig_info(int arg)
 {
     if(af==0) return;
-    printf("Validating %"I64d" of %"I64d"\n", af->pos,af->image_size);
+    printf("Validating %" I64d" of %" I64d"\n", af->pos,af->image_size);
 }
 
 
@@ -362,7 +362,7 @@ void print_info(AFFILE *af,const char *segname)
     memset(output_line,0,sizeof(output_line));
 
     /* Now append the arg and the data len */
-    sprintf(output_line,"%-24s %8"PRIu32"   %8d   ",segname,arg,(int)data_len);
+    sprintf(output_line,"%-24s %8" PRIu32 "   %8d   ",segname,arg,(int)data_len);
 
     if(opt_no_preview){
 	printf("%s\n",output_line);
@@ -392,7 +392,7 @@ void print_info(AFFILE *af,const char *segname)
 	 */
 	switch(data_len){
 	case 8:
-	    printf("%s= %"I64d" (64-bit value)\n",
+	    printf("%s= %" I64d" (64-bit value)\n",
 		   output_line,af_decode_q(data));
 	    break;
 	case 0:
@@ -613,22 +613,22 @@ int info_file(const char *infile)
 
 
     printf("\n");
-    printf("Total segments:        %8"PRIu32"   (%"PRIu32" real)\n", total_segs,(total_segs-total_nulls));
+    printf("Total segments:        %8" PRIu32 "   (%" PRIu32" real)\n", total_segs,(total_segs-total_nulls));
     if(aes_segs){
 	printf("  Encrypted segments:  %8u\n",aes_segs);
     }
-    printf("  Page  segments:      %8"PRIu32"\n",total_pages);
-    printf("  Hash  segments:      %8"PRIu32"\n",total_hashes);
-    printf("  Signature segments:  %8"PRIu32"\n",total_signatures);
-    printf("  Null segments:       %8"PRIu32"\n",total_nulls);
+    printf("  Page  segments:      %8" PRIu32 "\n",total_pages);
+    printf("  Hash  segments:      %8" PRIu32 "\n",total_hashes);
+    printf("  Signature segments:  %8" PRIu32 "\n",total_signatures);
+    printf("  Null segments:       %8" PRIu32 "\n",total_nulls);
     if(opt_all){
-	printf("  Empty segments:      %8"PRIu32"\n",total_nulls);
+	printf("  Empty segments:      %8" PRIu32 "\n",total_nulls);
 	printf("\n");
-	printf("Total data bytes in segments: %"I64d"\n",total_datalen);
+	printf("Total data bytes in segments: %" I64d"\n",total_datalen);
 
 	printf("Total space in file dedicated to segment names: %zd\n",
 	       total_segname_len);
-	printf("Total overhead for %"PRIu32" segments: %zd bytes (%"PRIu32"*(%zd+%zd))\n",
+	printf("Total overhead for %" PRIu32 " segments: %zd bytes (%" PRIu32 "*(%zd+%zd))\n",
 	       total_segs,
 	       (size_t) total_segs*(sizeof(struct af_segment_head) +sizeof(struct af_segment_tail)),
 	       total_segs,
@@ -660,7 +660,7 @@ int info_file(const char *infile)
 	//printf("device_bytes=%"I64d"\n",device_bytes);
 	//printf("device_pages=%"I64d"\n",device_pages);
 	if(missing_pages!=0){
-	    printf("Missing page segments: %8"I64u"\n",missing_pages);
+	    printf("Missing page segments: %8" I64u"\n",missing_pages);
 	}
 	else {
 	    some_missing_pages=0;
@@ -675,7 +675,7 @@ int info_file(const char *infile)
 
     if(some_missing_pages && opt_debug){
 	printf("Cannot calculate missing pages\n");
-	printf("  device_sectors=%"I64d" image_pagesize=%"PRIu32" sectorsize=%"PRIu32"\n",
+	printf("  device_sectors=%" I64d" image_pagesize=%" PRIu32 " sectorsize=%" PRIu32 "\n",
 	       device_sectors,af->image_pagesize,af->image_sectorsize);
     }
     af_close(af);
@@ -696,8 +696,8 @@ void figure_media(const char *fn)
     printf("<!DOCTYPE Server >\n");
     printf("<device name='%s'>\n",fn);
     printf("   <sector_size>%d</sector_size>\n",afb.sector_size);
-    printf("   <total_sectors>%"PRId64"</total_sectors>\n",afb.total_sectors);
-    printf("   <max_read_blocks>%"PRIu64"</max_read_blocks>\n",afb.max_read_blocks);
+    printf("   <total_sectors>%" PRId64 "</total_sectors>\n",afb.total_sectors);
+    printf("   <max_read_blocks>%" PRIu64 "</max_read_blocks>\n",afb.max_read_blocks);
     printf("</device>\n");
     close(fd);
 }

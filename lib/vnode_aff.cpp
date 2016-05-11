@@ -111,7 +111,7 @@ static int aff_write_ignore(AFFILE *af,size_t bytes)
 
 int aff_write_seg(AFFILE *af, const char *segname,uint32_t arg,const u_char *data,size_t datalen)
 {
-    if(af_trace) fprintf(af_trace,"aff_write_seg(%p,%s,%"PRIu32",%p,len=%u)\n",
+    if(af_trace) fprintf(af_trace,"aff_write_seg(%p,%s,%" PRIu32 ",%p,len=%u)\n",
 			 af,segname,arg,data,(int)datalen);
 
     struct af_segment_head segh;
@@ -141,7 +141,7 @@ int aff_write_seg(AFFILE *af, const char *segname,uint32_t arg,const u_char *dat
     aff_toc_update(af,segname,ftello(af->aseg),datalen);
 
 
-    if(af_trace) fprintf(af_trace,"aff_write_seg: putting segment %s (datalen=%d) offset=%"PRId64"\n",
+    if(af_trace) fprintf(af_trace,"aff_write_seg: putting segment %s (datalen=%d) offset=%" PRId64 "\n",
 			 segname,(int)datalen,ftello(af->aseg));
 
     if(fwrite(&segh,sizeof(segh),1,af->aseg)!=1) return -10;
@@ -307,7 +307,7 @@ static int aff_get_next_seg(AFFILE *af,char *segname,size_t segname_len,uint32_t
 	return AF_ERROR_TAIL;
     }
     if(stl != calculated_segment_len){
-	snprintf(af->error_str,sizeof(af->error_str),"af_get_next_segv: AF file corrupt (%"PRIu32"!=%"PRIu32")/!",
+	snprintf(af->error_str,sizeof(af->error_str),"af_get_next_segv: AF file corrupt (%" PRIu32 "!=%" PRIu32 ")/!",
 		 stl,calculated_segment_len);
 	fseeko(af->aseg,start,SEEK_SET); // go back to last good position
 	return AF_ERROR_TAIL;
@@ -363,7 +363,7 @@ static int aff_update_seg(AFFILE *af, const char *name,
     size_t size_needed = vallen+aff_segment_overhead(name);
     struct aff_toc_mem *adm = aff_toc(af,name);
 
-    if(af_trace) fprintf(af_trace,"aff_update_seg(name=%s,arg=%"PRIu32",vallen=%u)\n",name,arg,vallen);
+    if(af_trace) fprintf(af_trace,"aff_update_seg(name=%s,arg=%" PRIu32 ",vallen=%u)\n",name,arg,vallen);
 
     if(adm)
     {

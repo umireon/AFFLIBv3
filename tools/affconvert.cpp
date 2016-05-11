@@ -414,15 +414,15 @@ int convert(const char *infile,char *outfile)
 	    
 	    int64_t pagenum = *i;
 	    
-	    if(!opt_quiet) printf("Converting page %"I64d" of %"I64d"\r",pagenum,highest_pagenum);fflush(stdout);
+	    if(!opt_quiet) printf("Converting page %" I64d " of %" I64d "\r",pagenum,highest_pagenum);fflush(stdout);
 	    
 	    size_t data_len = image_pagesize;
 	    if(af_get_page(a_in,pagenum,data,&data_len)){
-		err(1,"af_get_page(file=%s,page=%"I64d")",
+		err(1,"af_get_page(file=%s,page=%" I64d ")",
 		    af_filename(a_in),pagenum);
 	    }
 	    if(af_update_page(a_out,pagenum,data,data_len)){
-		err(1,"af_update_page(file=%s,page=%"I64d")",
+		err(1,"af_update_page(file=%s,page=%" I64d ")",
 		    af_filename(a_out),pagenum);
 	    }
 	    
@@ -490,10 +490,10 @@ int convert(const char *infile,char *outfile)
 
     /* Finish the hash calculations and write to the db */
     if(!opt_quiet){
-	printf("bytes converted: %"I64d" \n",total_bytes_converted);
+	printf("bytes converted: %" I64d " \n",total_bytes_converted);
 	/* If the vnode implementation tracked segments written, report it. */
 	if(a_out->pages_written || a_out->pages_compressed){
-	    printf("Total pages: %"I64u"  (%"I64u" compressed)\n",
+	    printf("Total pages: %" I64u "  (%" I64u " compressed)\n",
 		   a_out->pages_written,a_out->pages_compressed);
 	}
     }
@@ -543,7 +543,7 @@ int convert(const char *infile,char *outfile)
 int64_t atoi64(const char *buf)
 {
     int64_t r=0;
-    sscanf(buf,"%"I64d,&r);
+    sscanf(buf,"%" I64d,&r);
     return r;
 }
 

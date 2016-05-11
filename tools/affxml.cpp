@@ -135,7 +135,7 @@ bool is_blank(const u_char *buf,size_t len)
 
 void print_xml64(const char *name,int64_t val)
 {
-    printf("   <%s coding='base10'>%"I64d"</%s>\n\n",name,val,name);
+    printf("   <%s coding='base10'>%" I64d"</%s>\n\n",name,val,name);
 }
 
 int xml_info(const char *infile)
@@ -191,7 +191,7 @@ int xml_info(const char *infile)
 	    size_t pagesize = af_page_size(af);
 	    size_t sectorsize = af_get_sectorsize(af);
 	    if(af_get_page(af,*it,data,&pagesize)){
-		err(1,"Can't read page %"PRId64,*it);
+		err(1,"Can't read page %" PRId64,*it);
 	    }
 	    psb.pages++;
 	    bool allblank = true;
@@ -250,14 +250,14 @@ int xml_info(const char *infile)
 	     * The strcmp is there because early AF_IMAGESIZE segs didn't set
 	     * AF_SEG_QUADWORD...
 	     */
-	    printf("    <%s coding='base10'>%"I64d"</%s>\n",segname,af_decode_q(data),segname);
+	    printf("    <%s coding='base10'>%" I64d"</%s>\n",segname,af_decode_q(data),segname);
 	    free(data);
 	    continue;
 	}
 
 	/* If datalen==0, just print the arg as an unsigned number */
 	if(datalen==0){
-	    printf("    <%s coding='base10'>%"PRIu32"</%s>\n",segname,arg,segname);
+	    printf("    <%s coding='base10'>%" PRIu32 "</%s>\n",segname,arg,segname);
 	    free(data);
 	    continue;
 	}
@@ -265,7 +265,7 @@ int xml_info(const char *infile)
 	/* Just handle it as binhex ... */
 	printf("    <%s",segname);
 	if(datalen==0){
-	    printf(" arg='%"PRIu32"' />\n",arg);
+	    printf(" arg='%" PRIu32 "' />\n",arg);
 	    free(data);
 	    continue;
 	}
