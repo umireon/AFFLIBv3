@@ -1,6 +1,6 @@
 #include <windows.h>
 
-#define PACKAGE_VERSION "3.7.7"
+#define PACKAGE_VERSION "3.7.8"
 
 #undef USE_LIBEWF
 #undef USE_QEMU
