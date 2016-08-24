@@ -25,8 +25,11 @@ using namespace std;
 #include <cstring>
 #endif
 
-
-
+/* Support OpenSSL before 1.1.0 */
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
+#define EVP_MD_CTX_new EVP_MD_CTX_create
+#define EVP_MD_CTX_free EVP_MD_CTX_destroy
+#endif
 
 
 /****************************************************************
@@ -82,10 +85,14 @@ int af_SHA256(const unsigned char *data,size_t datalen,unsigned char md[32])
     if(!sha256) return -1;
 
     uint32_t sha256_buflen = 32;
-    EVP_MD_CTX ctx;
-    EVP_DigestInit(&ctx,sha256);
-    EVP_DigestUpdate(&ctx,data,datalen);
-    if(EVP_DigestFinal(&ctx,md,&sha256_buflen)!=1) return -1; // EVP_DigestFinal returns 1 for success
+    EVP_MD_CTX *ctx = EVP_MD_CTX_new();
+    EVP_DigestInit(ctx,sha256);
+    EVP_DigestUpdate(ctx,data,datalen);
+    if(EVP_DigestFinal(ctx,md,&sha256_buflen)!=1){ // EVP_DigestFinal returns 1 for success
+	EVP_MD_CTX_free(ctx);
+	return -1;
+    }
+    EVP_MD_CTX_free(ctx);
     return 0;
 }
 
@@ -387,22 +394,23 @@ static int check_keys(EVP_PKEY *privkey,EVP_PKEY *pubkey)
     const EVP_MD *sha256 = EVP_get_digestbyname("SHA256");
     if(!sha256) return -1;		// no SHA256.
 
-    EVP_MD_CTX md;			/* EVP message digest */
-
+    EVP_MD_CTX *md = EVP_MD_CTX_new();	/* EVP message digest */
 
     /* make the plaintext message */
     memset(ptext,0,sizeof(ptext));
     strcpy(ptext,"Test Message");
-    EVP_SignInit(&md,sha256);
-    EVP_SignUpdate(&md,ptext,sizeof(ptext));
-    EVP_SignFinal(&md,sig,&siglen,privkey);
+    EVP_SignInit(md,sha256);
+    EVP_SignUpdate(md,ptext,sizeof(ptext));
+    EVP_SignFinal(md,sig,&siglen,privkey);
 
     /* Verify the message */
-    EVP_VerifyInit(&md,sha256);
-    EVP_VerifyUpdate(&md,ptext,sizeof(ptext));
-    if(EVP_VerifyFinal(&md,sig,siglen,pubkey)!=1){
+    EVP_VerifyInit(md,sha256);
+    EVP_VerifyUpdate(md,ptext,sizeof(ptext));
+    if(EVP_VerifyFinal(md,sig,siglen,pubkey)!=1){
+	EVP_MD_CTX_free(md);
 	return -3;
     }
+    EVP_MD_CTX_free(md);
     return 0;
 }
 
@@ -494,12 +502,13 @@ int af_sign_seg3(AFFILE *af,const char *segname,
     unsigned char sig[1024];		/* signature; bigger than needed */
     uint32_t siglen = sizeof(sig);	/* length of signature */
 
-    EVP_MD_CTX md;			/* EVP message digest */
-    EVP_SignInit(&md,sha256);
-    EVP_SignUpdate(&md,(const unsigned char *)segname,strlen(segname)+1);
-    EVP_SignUpdate(&md,(const unsigned char *)&arg_net,sizeof(arg_net));
-    EVP_SignUpdate(&md,data,datalen);
-    EVP_SignFinal(&md,sig,&siglen,af->crypto->sign_privkey);
+    EVP_MD_CTX *md = EVP_MD_CTX_new();	/* EVP message digest */
+    EVP_SignInit(md,sha256);
+    EVP_SignUpdate(md,(const unsigned char *)segname,strlen(segname)+1);
+    EVP_SignUpdate(md,(const unsigned char *)&arg_net,sizeof(arg_net));
+    EVP_SignUpdate(md,data,datalen);
+    EVP_SignFinal(md,sig,&siglen,af->crypto->sign_privkey);
+    EVP_MD_CTX_free(md);
     return (*af->v->update_seg)(af,signed_segname,signmode,sig,siglen);
 }
 
@@ -618,12 +627,13 @@ int af_hash_verify_seg2(AFFILE *af,const char *segname,u_char *sigbuf_,size_t si
     uint8_t sigbuf[1024];
     uint32_t sigbuf_len = sizeof(sigbuf);
     uint32_t arg_net = htonl(arg);
-    EVP_MD_CTX md;			/* EVP message digest */
-    EVP_DigestInit(&md,sha256);
-    EVP_DigestUpdate(&md,(const unsigned char *)segname,strlen(segname)+1);
-    EVP_DigestUpdate(&md,(const unsigned char *)&arg_net,sizeof(arg_net));
-    EVP_DigestUpdate(&md,segbuf,seglen);
-    EVP_DigestFinal(&md,sigbuf,&sigbuf_len);
+    EVP_MD_CTX *md = EVP_MD_CTX_new();	/* EVP message digest */
+    EVP_DigestInit(md,sha256);
+    EVP_DigestUpdate(md,(const unsigned char *)segname,strlen(segname)+1);
+    EVP_DigestUpdate(md,(const unsigned char *)&arg_net,sizeof(arg_net));
+    EVP_DigestUpdate(md,segbuf,seglen);
+    EVP_DigestFinal(md,sigbuf,&sigbuf_len);
+    EVP_MD_CTX_free(md);
     int r = memcmp(sigbuf,sigbuf_,sigbuf_len);
     if(sigbuf_len != sigbuf_len_) r = -1; // doesn't match
     free(segbuf);
@@ -677,12 +687,13 @@ int af_sig_verify_seg2(AFFILE *af,const char *segname,EVP_PKEY * /*pubkey*/,u_ch
 
     /* Verify the signature*/
     uint32_t arg_net = htonl(arg);
-    EVP_MD_CTX md;			/* EVP message digest */
-    EVP_VerifyInit(&md,sha256);
-    EVP_VerifyUpdate(&md,(const unsigned char *)segname,strlen(segname)+1);
-    EVP_VerifyUpdate(&md,(const unsigned char *)&arg_net,sizeof(arg_net));
-    EVP_VerifyUpdate(&md,segbuf,seglen);
-    int r = EVP_VerifyFinal(&md,sigbuf,sigbuf_len,af->crypto->sign_pubkey);
+    EVP_MD_CTX *md = EVP_MD_CTX_new();	/* EVP message digest */
+    EVP_VerifyInit(md,sha256);
+    EVP_VerifyUpdate(md,(const unsigned char *)segname,strlen(segname)+1);
+    EVP_VerifyUpdate(md,(const unsigned char *)&arg_net,sizeof(arg_net));
+    EVP_VerifyUpdate(md,segbuf,seglen);
+    EVP_MD_CTX_free(md);
+    int r = EVP_VerifyFinal(md,sigbuf,sigbuf_len,af->crypto->sign_pubkey);
     free(segbuf);
 
     if(r==1) return 0;			// verifies
@@ -803,7 +814,7 @@ int  af_seal_affkey_using_certificates(AFFILE *af,const char *certfiles[],int nu
 	unsigned char affkey_copy[32];
 	memcpy(affkey_copy,affkey,32);
 
-	EVP_CIPHER_CTX cipher_ctx;
+	EVP_CIPHER_CTX *cipher_ctx = EVP_CIPHER_CTX_new();
 
 	/* IV */
 	unsigned char iv[EVP_MAX_IV_LENGTH];
@@ -822,15 +833,26 @@ int  af_seal_affkey_using_certificates(AFFILE *af,const char *certfiles[],int nu
 	int encrypted_bytes = 0;
 	memset(encrypted_affkey,0,sizeof(encrypted_affkey));
 
-	r = EVP_SealInit(&cipher_ctx,EVP_aes_256_cbc(),ek_array,&ek_size,&iv[0],&seal_pubkey,1);
-	if(r!=1) return -10;		// bad
+	r = EVP_SealInit(cipher_ctx,EVP_aes_256_cbc(),ek_array,&ek_size,&iv[0],&seal_pubkey,1);
+	if(r!=1){
+	    EVP_CIPHER_CTX_free(cipher_ctx);
+	    return -10;		// bad
+	}
 
-	r = EVP_SealUpdate(&cipher_ctx,encrypted_affkey,&encrypted_bytes,affkey_copy,sizeof(affkey_copy));
-	if(r!=1) return -11;		// bad
+	r = EVP_SealUpdate(cipher_ctx,encrypted_affkey,&encrypted_bytes,affkey_copy,sizeof(affkey_copy));
+	if(r!=1){
+	    EVP_CIPHER_CTX_free(cipher_ctx);
+	    return -11;		// bad
+	}
 
 	int total_encrypted_bytes = encrypted_bytes;
-	r = EVP_SealFinal(&cipher_ctx,encrypted_affkey+total_encrypted_bytes,&encrypted_bytes);
-	if(r!=1) return -12;
+	r = EVP_SealFinal(cipher_ctx,encrypted_affkey+total_encrypted_bytes,&encrypted_bytes);
+	if(r!=1){
+	    EVP_CIPHER_CTX_free(cipher_ctx);
+	    return -12;
+	}
+
+	EVP_CIPHER_CTX_free(cipher_ctx);
 
 	total_encrypted_bytes += encrypted_bytes;
 
@@ -926,20 +948,23 @@ int af_get_affkey_using_keyfile(AFFILE *af, const char *private_keyfile,u_char a
 	    unsigned char *encrypted_affkey = buf+int3+EVP_MAX_IV_LENGTH+ek_size;
 
 	    /* Now let's see if we can decode it*/
-	    EVP_CIPHER_CTX cipher_ctx;
-	    int r = EVP_OpenInit(&cipher_ctx,EVP_aes_256_cbc(),ek,ek_size,iv,seal_privkey);
+	    EVP_CIPHER_CTX *cipher_ctx = EVP_CIPHER_CTX_new();
+	    int r = EVP_OpenInit(cipher_ctx,EVP_aes_256_cbc(),ek,ek_size,iv,seal_privkey);
 	    if(r==1){
 		/* allocate a buffer for the decrypted data */
 		decrypted = (unsigned char *)malloc(total_encrypted_bytes);
-		if(!decrypted) return -1; // shouldn't fail
+		if(!decrypted){
+		    EVP_CIPHER_CTX_free(cipher_ctx);
+		    return -1; // shouldn't fail
+		}
 
 		int decrypted_len;
-		r = EVP_OpenUpdate(&cipher_ctx,decrypted,&decrypted_len,encrypted_affkey,total_encrypted_bytes);
+		r = EVP_OpenUpdate(cipher_ctx,decrypted,&decrypted_len,encrypted_affkey,total_encrypted_bytes);
 		if(r==1){
 		    /* OpenSSL requires that we call EVP_OpenFinal to finish the decryption */
 		    unsigned char *decrypted2 = decrypted+decrypted_len; // where the decryption continues
 		    int decrypted2_len = 0;
-		    r = EVP_OpenFinal(&cipher_ctx,decrypted2,&decrypted2_len);
+		    r = EVP_OpenFinal(cipher_ctx,decrypted2,&decrypted2_len);
 		    if(r==1){
 			memcpy(affkey,decrypted,32);
 			ret = 0;		// successful return
@@ -948,6 +973,7 @@ int af_get_affkey_using_keyfile(AFFILE *af, const char *private_keyfile,u_char a
 		memset(decrypted,0,total_encrypted_bytes); // overwrite our temp buffer
 		free(decrypted);
 	    }
+	    EVP_CIPHER_CTX_free(cipher_ctx);
 	}
     next:;
 	free(buf);
