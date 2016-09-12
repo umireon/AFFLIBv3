@@ -18,6 +18,11 @@
 #include <set>
 #include <algorithm>
 
+/* Support OpenSSL before 1.1.0 */
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
+#define EVP_MD_CTX_new EVP_MD_CTX_create
+#define EVP_MD_CTX_free EVP_MD_CTX_destroy
+#endif
 
 using std::string;
 using std::ostream;
@@ -95,25 +100,29 @@ public:
      */
     int compute_digest(AFFILE *af,string digestToUse){
 	const EVP_MD *md = EVP_get_digestbyname(digestToUse.c_str());
-	EVP_MD_CTX ctx;
 	if(!md) return -1;		// digest not available
-	EVP_DigestInit(&ctx,md);
 	if(af_seek(af,start,0)!=start) return -1; // can't seek
+	EVP_MD_CTX *ctx = EVP_MD_CTX_new();
+	EVP_DigestInit(ctx,md);
 
 	uint64_t bytes_read = 0;
 	while(bytes_read < this->bytes){
 	    u_char buf[65536];
 	    int to_read = (this->bytes-bytes_read) < sizeof(buf) ? (this->bytes-bytes_read) : sizeof(buf);
-	    if(af_read(af,buf,to_read)!=to_read) return -1; // error reading
+	    if(af_read(af,buf,to_read)!=to_read){
+		EVP_MD_CTX_free(ctx);
+		return -1; // error reading
+	    }
 	    /* compute the hash */
-	    EVP_DigestUpdate(&ctx,buf,to_read);
+	    EVP_DigestUpdate(ctx,buf,to_read);
 	    bytes_read += to_read;
 	}
 	/* Compute the results */
 	if(digest!=0) free(digest);
 	u_int digest_bytes = 1024;
 	digest = (u_char *)malloc(digest_bytes);		// big enough for any conceivable digest
-	EVP_DigestFinal(&ctx,digest,&digest_bytes);
+	EVP_DigestFinal(ctx,digest,&digest_bytes);
+	EVP_MD_CTX_free(ctx);
 	digest_bits_ = digest_bytes*8;
 	digest_name  = digestToUse;
 	hexdigest    = bin2hex(digest,digest_bits_/8);

@@ -27,6 +27,12 @@
 #include <openssl/pem.h>
 #include <openssl/x509.h>
 
+/* Support OpenSSL before 1.1.0 */
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
+#define EVP_MD_CTX_new EVP_MD_CTX_create
+#define EVP_MD_CTX_free EVP_MD_CTX_destroy
+#endif
+
 using namespace std;
 using namespace aff;
 
@@ -248,10 +254,11 @@ int  verify_bom_signature(AFFILE *af,const char *buf)
     }
 
     /* Try to verify it */
-    EVP_MD_CTX md;
-    EVP_VerifyInit(&md,sha256);
-    EVP_VerifyUpdate(&md,buf,sig_start-buf);
-    int r = EVP_VerifyFinal(&md,sigbuf,sigbuf_len,X509_get_pubkey(cert));
+    EVP_MD_CTX *md = EVP_MD_CTX_new();
+    EVP_VerifyInit(md,sha256);
+    EVP_VerifyUpdate(md,buf,sig_start-buf);
+    int r = EVP_VerifyFinal(md,sigbuf,sigbuf_len,X509_get_pubkey(cert));
+    EVP_MD_CTX_free(md);
     if(r!=1){ 
 	printf("BAD SIGNATURE ON BOM\n");
 	return -1;
@@ -430,16 +437,17 @@ int hash_verify(AFFILE *af)
     size_t md5_len  =sizeof(md5_buf);
     const EVP_MD *md5_evp = 0;
     const EVP_MD *sha1_evp = 0;
-    EVP_MD_CTX md5,sha1;
+    EVP_MD_CTX *md5 = EVP_MD_CTX_new();
+    EVP_MD_CTX *sha1 = EVP_MD_CTX_new();
     if(af_get_seg(af,AF_SHA1,0,sha1_buf,&sha1_len)==0){
 	printf("SHA1 stored in file:     %s\n",af_hexbuf(hexbuf,sizeof(hexbuf),sha1_buf,sha1_len,0));
 	sha1_evp = EVP_get_digestbyname("sha1");
-	EVP_DigestInit(&sha1,sha1_evp);
+	EVP_DigestInit(sha1,sha1_evp);
     }
     if(af_get_seg(af,AF_MD5,0,md5_buf,&md5_len)==0){
 	printf("MD5 stored in file:      %s\n",af_hexbuf(hexbuf,sizeof(hexbuf),md5_buf,md5_len,0));
 	md5_evp = EVP_get_digestbyname("md5");
-	EVP_DigestInit(&md5,md5_evp);
+	EVP_DigestInit(md5,md5_evp);
     }
     /* Might as well read this puppy */
     u_char *buf = (u_char *)malloc(af_get_pagesize(af));
@@ -457,8 +465,8 @@ int hash_verify(AFFILE *af)
 	       t.eta_text(frac).c_str());
 	readsize = af_read(af,buf,af_get_pagesize(af));
 	if(readsize<1) break;
-	if(md5_evp) EVP_DigestUpdate(&md5,buf,readsize);
-	if(sha1_evp) EVP_DigestUpdate(&sha1,buf,readsize);
+	if(md5_evp) EVP_DigestUpdate(md5,buf,readsize);
+	if(sha1_evp) EVP_DigestUpdate(sha1,buf,readsize);
 	total_read += readsize;
     } while(total_read < af_get_imagesize(af));
 	
@@ -468,7 +476,7 @@ int hash_verify(AFFILE *af)
 	unsigned char sha1_calc[32];
 	unsigned int sha1_calc_len = sizeof(sha1_calc);
 	
-	EVP_DigestFinal(&sha1,sha1_calc,(unsigned int *)&sha1_calc_len);
+	EVP_DigestFinal(sha1,sha1_calc,(unsigned int *)&sha1_calc_len);
 	printf("Calculated SHA1: %s  ",af_hexbuf(hexbuf,sizeof(hexbuf),sha1_calc,sha1_calc_len,0));
 	if(memcmp(sha1_buf,sha1_calc,sha1_len)==0){
 	    printf("VERIFIES\n");
@@ -481,7 +489,7 @@ int hash_verify(AFFILE *af)
 	unsigned char md5_calc[32];
 	unsigned int md5_calc_len = sizeof(md5_calc);
 	
-	EVP_DigestFinal(&md5,md5_calc,(unsigned int *)&md5_calc_len);
+	EVP_DigestFinal(md5,md5_calc,(unsigned int *)&md5_calc_len);
 	printf("Calculated MD5:  %s          ",af_hexbuf(hexbuf,sizeof(hexbuf),md5_calc,md5_calc_len,0));
 	if(memcmp(md5_buf,md5_calc,md5_len)==0){
 	    printf("VERIFIES\n");
@@ -490,6 +498,8 @@ int hash_verify(AFFILE *af)
 	}
     }
 
+    EVP_MD_CTX_free(md5);
+    EVP_MD_CTX_free(sha1);
     af_close(af);
     return 0;
 }

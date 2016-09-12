@@ -38,6 +38,11 @@ const char *tempdir = "/tmp/";
 #define MIN(x,y) ((x)<(y)?(x):(y))
 #endif
 
+/* Support OpenSSL before 1.1.0 */
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
+#define EVP_MD_CTX_new EVP_MD_CTX_create
+#define EVP_MD_CTX_free EVP_MD_CTX_destroy
+#endif
 
 const char *filename(char *buf,int buflen,const char *base)
 {
@@ -769,12 +774,12 @@ void rsatest()
       return;
     }
 
-    EVP_MD_CTX md;
+    EVP_MD_CTX *md = EVP_MD_CTX_new();
     EVP_PKEY *pkey = PEM_read_bio_PrivateKey(bp,0,0,0);
 
-    EVP_SignInit(&md,sha256);
-    EVP_SignUpdate(&md,ptext,sizeof(ptext));
-    EVP_SignFinal(&md,sig,&siglen,pkey);
+    EVP_SignInit(md,sha256);
+    EVP_SignUpdate(md,ptext,sizeof(ptext));
+    EVP_SignFinal(md,sig,&siglen,pkey);
 
     /* let's try to verify it */
     bp = BIO_new_file("signing_cert.pem","r");
@@ -789,23 +794,25 @@ void rsatest()
 
     printf("pubkey=%p\n",pubkey);
 
-    EVP_VerifyInit(&md,sha256);
-    EVP_VerifyUpdate(&md,ptext,sizeof(ptext));
-    int r = EVP_VerifyFinal(&md,sig,siglen,pubkey);
+    EVP_VerifyInit(md,sha256);
+    EVP_VerifyUpdate(md,ptext,sizeof(ptext));
+    int r = EVP_VerifyFinal(md,sig,siglen,pubkey);
     printf("r=%d\n",r);
 
     printf("do it again...\n");
-    EVP_VerifyInit(&md,sha256);
-    EVP_VerifyUpdate(&md,ptext,sizeof(ptext));
-    r = EVP_VerifyFinal(&md,sig,siglen,pubkey);
+    EVP_VerifyInit(md,sha256);
+    EVP_VerifyUpdate(md,ptext,sizeof(ptext));
+    r = EVP_VerifyFinal(md,sig,siglen,pubkey);
     printf("r=%d\n",r);
 
     printf("make a tiny change...\n");
     ptext[0]='f';
-    EVP_VerifyInit(&md,sha256);
-    EVP_VerifyUpdate(&md,ptext,sizeof(ptext));
-    r = EVP_VerifyFinal(&md,sig,siglen,pubkey);
+    EVP_VerifyInit(md,sha256);
+    EVP_VerifyUpdate(md,ptext,sizeof(ptext));
+    r = EVP_VerifyFinal(md,sig,siglen,pubkey);
     printf("r=%d\n",r);
+
+    EVP_MD_CTX_free(md);
 }
 
 void xmlseg(BIO *bp,AFFILE *af,const char *segname)

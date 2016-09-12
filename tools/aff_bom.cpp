@@ -35,6 +35,12 @@
 #include <readline/readline.h>
 #endif
 
+/* Support OpenSSL before 1.1.0 */
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
+#define EVP_MD_CTX_new EVP_MD_CTX_create
+#define EVP_MD_CTX_free EVP_MD_CTX_destroy
+#endif
+
 using namespace std;
 
 int parse_chain(const string &name)
@@ -188,10 +194,11 @@ void aff_bom::close()
 	unsigned char sig[1024];
 	u_int  siglen = sizeof(sig);
 
-	EVP_MD_CTX md;
-	EVP_SignInit(&md,sha256);
-	EVP_SignUpdate(&md,xbuf,xlen);
-	EVP_SignFinal(&md,sig,&siglen,privkey);
+	EVP_MD_CTX *md = EVP_MD_CTX_new();
+	EVP_SignInit(md,sha256);
+	EVP_SignUpdate(md,xbuf,xlen);
+	EVP_SignFinal(md,sig,&siglen,privkey);
+	EVP_MD_CTX_free(md);
 
 	/* Write the signature in base64 encoding... */
 	BIO *b64 = BIO_new(BIO_f_base64());
@@ -224,12 +231,13 @@ void aff_bom::make_hash(u_char seghash[SHA256_SIZE], uint32_t arg,const char *se
     if(sha256){
 	unsigned int seghash_len = SHA256_SIZE;
 	uint32_t arg_net = htonl(arg);
-	EVP_MD_CTX md;		/* EVP message digest */
-	EVP_DigestInit(&md,sha256);
-	EVP_DigestUpdate(&md,(const unsigned char *)segname,strlen(segname)+1);
-	EVP_DigestUpdate(&md,(const unsigned char *)&arg_net,sizeof(arg_net));
-	EVP_DigestUpdate(&md,segbuf,segsize);
-	EVP_DigestFinal(&md,seghash,&seghash_len);
+	EVP_MD_CTX *md = EVP_MD_CTX_new();		/* EVP message digest */
+	EVP_DigestInit(md,sha256);
+	EVP_DigestUpdate(md,(const unsigned char *)segname,strlen(segname)+1);
+	EVP_DigestUpdate(md,(const unsigned char *)&arg_net,sizeof(arg_net));
+	EVP_DigestUpdate(md,segbuf,segsize);
+	EVP_DigestFinal(md,seghash,&seghash_len);
+	EVP_MD_CTX_free(md);
     }
 }
 
