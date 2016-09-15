@@ -297,7 +297,6 @@ int  af_establish_aes_passphrase(AFFILE *af,const char *passphrase)
     /* Okay; make a random key and encrypt it with the passphrase */
     unsigned char affkey[32];
     int r = RAND_bytes(affkey,sizeof(affkey)); // makes a random key; with REAL random bytes
-    if(r!=1) r = RAND_pseudo_bytes(affkey,sizeof(affkey)); // true random not supported
     if(r!=1) return AF_ERROR_RNG_FAIL; // pretty bad...
 
     /* I have the key, now save it */
@@ -777,7 +776,6 @@ int  af_set_seal_certificates(AFFILE *af,const char *certfiles[],int numcertfile
     /* First make the affkey */
     unsigned char affkey[32];
     int r = RAND_bytes(affkey,sizeof(affkey));
-    if(r!=1) r = RAND_pseudo_bytes(affkey,sizeof(affkey)); // true random not supported
     if(r!=1) return AF_ERROR_RNG_FAIL; // pretty bad...
 
     af_seal_affkey_using_certificates(af, certfiles, numcertfiles, affkey);
@@ -818,7 +816,8 @@ int  af_seal_affkey_using_certificates(AFFILE *af,const char *certfiles[],int nu
 
 	/* IV */
 	unsigned char iv[EVP_MAX_IV_LENGTH];
-	RAND_pseudo_bytes(iv, EVP_MAX_IV_LENGTH); /* make a random iv */
+	r = RAND_bytes(iv, EVP_MAX_IV_LENGTH); /* make a random iv */
+	if(r!=1) return AF_ERROR_RNG_FAIL; // pretty bad...
 
 	/* EK */
 	unsigned char *ek=0;

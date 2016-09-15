@@ -226,7 +226,7 @@ AC_CHECK_LIB([crypto],[EVP_get_digestbyname],,
 
 AC_CHECK_LIB([md],[MD5])		# if libmd is available, get it
 
-AC_CHECK_FUNCS([MD5 SHA1 AES_encrypt RAND_pseudo_bytes des_read_pw_string EVP_read_pw_string EVP_MD_size])
+AC_CHECK_FUNCS([MD5 SHA1 AES_encrypt RAND_bytes des_read_pw_string EVP_read_pw_string EVP_MD_size])
 AC_CHECK_FUNCS([PEM_read_bio_RSA_PUBKEY])
 
 ################################################################

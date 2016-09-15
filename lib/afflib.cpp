@@ -596,7 +596,7 @@ int af_make_badflag(AFFILE *af)
     if(af->badflag!=0) free(af->badflag);
     af->badflag = (unsigned char *)malloc(af->image_sectorsize); // current sector size
 
-    RAND_pseudo_bytes(af->badflag,af->image_sectorsize);
+    RAND_bytes(af->badflag,af->image_sectorsize);
     strcpy((char *)af->badflag,"BAD SECTOR");
 
     AF_WRLOCK(af);
@@ -624,7 +624,7 @@ int af_make_gid(AFFILE *af)
     AF_WRLOCK(af);
     if(af_get_seg(af,AF_IMAGE_GID,0,0,0)!=0){
 	unsigned char bit128[16];
-	RAND_pseudo_bytes(bit128,sizeof(bit128));
+	RAND_bytes(bit128,sizeof(bit128));
 	int r = af_update_seg(af,AF_IMAGE_GID,0,bit128,sizeof(bit128));
 	if(r<0) ret = -1;
 	else ret = 1;

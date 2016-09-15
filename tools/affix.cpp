@@ -169,7 +169,7 @@ int fix(const char *infile)
 	if(fix_add_gid) {
 	    printf(" ... adding GID  ",infile);
 	    unsigned char bit128[16];
-	    RAND_pseudo_bytes(bit128,sizeof(bit128));
+	    RAND_bytes(bit128,sizeof(bit128));
 	    if(af_update_seg(af,AF_IMAGE_GID,0,bit128,sizeof(bit128))){
 		warn("Cannot write %s: ",AF_IMAGE_GID);
 	    }
