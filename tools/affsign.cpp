@@ -183,7 +183,7 @@ int affsign(const char *fn)
 	    /* Now get the raw source segment */
 	    uint32_t arg=0;
 	    if(af_get_seg(af,segname,&arg,segbuf,&seglen)){
-		err(1,"Cannot read segment '%s' in %s. Deleteing output file", segname,af_filename(af));
+		err(1,"Cannot read segment '%s' in %s. Deleting output file", segname,af_filename(af));
 	    }
 	    aff_bom::make_hash(seghash,arg,segname,segbuf,seglen);
 	    sigmode = AF_SIGNATURE_MODE0;

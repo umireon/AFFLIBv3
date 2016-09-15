@@ -367,7 +367,7 @@ int affcopy(char *infile,vector<string> &outfiles)
 	uint32_t arg=0;
 	if(af_get_seg(ain,segname,&arg,segbuf,&seglen)){
 	    unlink_outfiles(outfiles);	// failure; unlink the output files
-	    err(1,"Cannot read segment '%s' in %s. Deleteing output file", segname,af_filename(ain));
+	    err(1,"Cannot read segment '%s' in %s. Deleting output file", segname,af_filename(ain));
 	}
 
 	/* Calculate the MD5 of this segment and remember it in the map */
