@@ -120,43 +120,50 @@ AC_CHECK_LIB([rt],[aio_error64])
 ################################################################
 ## Expat
 ## Required for S3 and Digital Signatures
-##
-AC_ARG_WITH(expat,
-  AS_HELP_STRING([--with-expat=PATH], [where libexpat is compiled (if it isn't installed); required for S3 and Digital Signatures]),
-  [LDFLAGS="-L${with_expat} $LDFLAGS" ;
-   CPPFLAGS="-I${with_expat}/lib $CPPFLAGS"])
+AC_ARG_WITH([expat],
+  AS_HELP_STRING([--with-expat], [build with expat; required for S3 and Digital Signatures @<:@default=check@:>@]),
+  [], [with_expat=check])
 
-have_expat=yes
-AC_CHECK_HEADER([expat.h])
-AC_CHECK_LIB([expat],[XML_ParserCreate],,[have_expat="no ";AC_MSG_WARN([expat not found; S3 and Digital Signatures not enabled])])
-
+have_expat=no
+AS_IF([test "x$with_expat" != xno],
+  [AC_CHECK_HEADER([expat.h],
+    [AC_CHECK_LIB([expat], [XML_ParserCreate],
+      [have_expat=yes])])
+   AS_IF([test "x$with_expat" != xcheck && test "x$have_expat" = xno],
+    [AC_MSG_FAILURE([--with-expat was given but test for expat failed])])])
 
 ################################################################
 ## LZMA (always enabled)
 AC_DEFINE(USE_LZMA, 1, [Enable LZMA compression])
 
+################################################################
+## curl
+## Required for S3
+AC_ARG_WITH([curl],
+  AS_HELP_STRING([--with-curl], [build with curl; required for S3 @<:@default=check@:>@]),
+  [], [with_curl=check])
+
+have_curl=no
+AS_IF([test "x$with_curl" != xno],
+  [AC_CHECK_HEADER([curl/curl.h],
+    [AC_CHECK_LIB([curl], [curl_global_init],
+      [have_curl=yes])])
+   AS_IF([test "x$with_curl" != xcheck && test "x$have_curl" = xno],
+    [AC_MSG_FAILURE([--with-curl was given but test for curl failed])])])
 
 ################################################################
 ## Amazon S3
 ## S3 requires curl and expat; otherwise we don't need them
-AC_ARG_ENABLE(s3,
-	AC_HELP_STRING([--enable-s3=yes],
-          [Support for Amazon S3 service. Requires CURL and Expat.]),
-          [enable_s3=$enableval], [enable_s3=no])
+AC_ARG_ENABLE([s3],
+  AC_HELP_STRING([--enable-s3], [Support for Amazon S3 service. Requires CURL and Expat. @<:@default=check@:>@]),
+    [enable_s3=$enableval], [enable_s3=check])
 
-if test "x${enable_s3}" = "xyes" ; then
-  AC_MSG_NOTICE([S3 support requested. Looking for curl and expat...])
-  AC_PATH_PROG(CURL_CONFIG,curl-config)
-  AC_ARG_WITH(curl,
-            AC_HELP_STRING([--with-curl=PATH], [where libcurl is installed; required for S3]),
-            [CURL_CONFIG="${with_curl}/bin/curl-config"])
-  AC_CHECK_HEADER([curl/curl.h],,
-    AC_MSG_WARN([curl/curl.h not found; Disabling S3 Support.])
-    enable_s3=no)
-  AC_CHECK_LIB([curl],[curl_global_init],,
-    AC_MSG_WARN([Curl library corrupt; Disabling S3 Support.])
-    enable_s3=no)
-fi
+AS_IF([test "x$enable_s3" != xno],
+  [AS_IF([test "x$have_expat" = xyes && test "x$have_curl" = xyes],
+    [enable_s3=yes],
+    [AS_IF([test "x$enable_s3" = xcheck],
+      [enable_s3=no],
+      [AC_MSG_FAILURE([--enable-s3 was given but required libraries are not found])])])])
 
 S3_BIN=
 if test "x${enable_s3}" = "xyes" ; then
@@ -232,24 +239,26 @@ AC_CHECK_FUNCS([PEM_read_bio_RSA_PUBKEY])
 ################################################################
 ## FUSE: Filesystem in Userspace
 AC_ARG_ENABLE(fuse,
-	AC_HELP_STRING([--enable-fuse=yes],
-	       [Support for FUSE, Filesystem in Userspace. (default yes)]),
-               [enable_fuse=$enableval], [enable_fuse=yes])
-if test "x${enable_fuse}" = "xyes" ; then
-  AC_MSG_NOTICE([FUSE requested])
-  CPPFLAGS="-D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=26 $CPPFLAGS"
-  AC_CHECK_HEADER([fuse.h],,
-    AC_MSG_NOTICE([fuse.h not found; Disabling FUSE support.])
-    enable_fuse=no)
-  AC_SUBST(FUSE_LIBS)
-  AC_SUBST(FUSE_CFLAGS)
-fi
+  AC_HELP_STRING([--enable-fuse], [Support for FUSE, Filesystem in Userspace. @<:@default=check@:>@]),
+    [enable_fuse=$enableval], [enable_fuse=check])
+
+have_fuse=no
+AS_IF([test "x$enable_fuse" != xno],
+  [CPPFLAGS="-D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=26 $CPPFLAGS"
+   AC_CHECK_HEADER([fuse.h],
+    [AC_CHECK_LIB([fuse], [fuse_version],
+      [have_fuse=yes])])
+   AS_IF([test "x$enable_fuse" != xcheck && test "x$have_fuse" = xno],
+    [AC_MSG_FAILURE([--enable-fuse was given but test for fuse failed])])])
+enable_fuse=$have_fuse
+
 AFFUSE_BIN=
-if test "${enable_fuse}" = "yes"; then
-  AC_DEFINE([USE_FUSE],1,[Use FUSE to mount AFF images])
-  AFFUSE_BIN='affuse$(EXEEXT)'
-  FUSE_LIBS=-lfuse
-fi
+AS_IF([test "x${enable_fuse}" = "xyes"],
+  [AC_SUBST(FUSE_LIBS)
+   AC_SUBST(FUSE_CFLAGS)
+   AC_DEFINE([USE_FUSE],1,[Use FUSE to mount AFF images])
+   AFFUSE_BIN='affuse$(EXEEXT)'
+   FUSE_LIBS=-lfuse])
 AC_SUBST(AFFUSE_BIN)
 AM_PROG_CC_C_O			dnl for affuse
 ##
