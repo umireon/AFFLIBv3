@@ -249,6 +249,9 @@ if test "${enable_fuse}" = "yes"; then
   AC_DEFINE([USE_FUSE],1,[Use FUSE to mount AFF images])
   AFFUSE_BIN='affuse$(EXEEXT)'
   FUSE_LIBS=-lfuse
+  if test `uname -s` = Darwin ; then
+    AC_CHECK_LIB(osxfuse,fuse_version,FUSE_LIBS=-losxfuse,)
+  fi
 fi
 AC_SUBST(AFFUSE_BIN)
 AM_PROG_CC_C_O			dnl for affuse
