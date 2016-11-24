@@ -105,3 +105,4 @@ affconfig.h
 *.dirstamp
 lib/aftest
 afflib-?.?.?
+compile
