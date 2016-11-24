@@ -247,7 +247,13 @@ AS_IF([test "x$enable_fuse" != xno],
   [CPPFLAGS="-D_FILE_OFFSET_BITS=64 -DFUSE_USE_VERSION=26 $CPPFLAGS"
    AC_CHECK_HEADER([fuse.h],
     [AC_CHECK_LIB([fuse], [fuse_version],
-      [have_fuse=yes])])
+      [FUSE_LIBS=-lfuse
+       have_fuse=yes])])
+   AS_IF([test `uname -s` = Darwin && test "x$have_fuse" != "xyes"],
+    [m4_ifdef([PKG_CHECK_MODULES],
+      [PKG_CHECK_MODULES([FUSE], [fuse],
+        [have_fuse=yes],
+        [:])])])
    AS_IF([test "x$enable_fuse" != xcheck && test "x$have_fuse" = xno],
     [AC_MSG_FAILURE([--enable-fuse was given but test for fuse failed])])])
 enable_fuse=$have_fuse
@@ -257,8 +263,7 @@ AS_IF([test "x${enable_fuse}" = "xyes"],
   [AC_SUBST(FUSE_LIBS)
    AC_SUBST(FUSE_CFLAGS)
    AC_DEFINE([USE_FUSE],1,[Use FUSE to mount AFF images])
-   AFFUSE_BIN='affuse$(EXEEXT)'
-   FUSE_LIBS=-lfuse])
+   AFFUSE_BIN='affuse$(EXEEXT)'])
 AC_SUBST(AFFUSE_BIN)
 AM_PROG_CC_C_O			dnl for affuse
 ##
