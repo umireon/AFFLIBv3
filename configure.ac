@@ -252,7 +252,7 @@ AS_IF([test "x$enable_fuse" != xno],
    AS_IF([test `uname -s` = Darwin && test "x$have_fuse" != "xyes"],
     [m4_ifdef([PKG_CHECK_MODULES],
       [PKG_CHECK_MODULES([FUSE], [fuse],
-        [have_fuse=yes])])]
+        [have_fuse=yes])])])
    AS_IF([test "x$enable_fuse" != xcheck && test "x$have_fuse" = xno],
     [AC_MSG_FAILURE([--enable-fuse was given but test for fuse failed])])])
 enable_fuse=$have_fuse
