@@ -34,11 +34,11 @@ ACX_PTHREAD()
 if test x"${cross_compiling}" = "xno" ; then
   # Bring additional directories where things might be found into our
   # search path. I don't know why autoconf doesn't do this by default
-  for spfx in /usr/local /opt/local /sw ${prefix} ; do
+  for spfx in ${prefix} /sw /opt/local /usr/local ; do
     AC_MSG_NOTICE([checking ${spfx}/include])
     if test -d ${spfx}/include; then
-        CPPFLAGS="-I${spfx}/include $CPPFLAGS"
-        LDFLAGS="-L${spfx}/lib $LDFLAGS"
+        CPPFLAGS="$CPPFLAGS -I${spfx}/include"
+        LDFLAGS="$LDFLAGS -L${spfx}/lib"
         AC_MSG_NOTICE([ *** ADDING ${spfx}/include to CPPFLAGS *** ])
         AC_MSG_NOTICE([ *** ADDING ${spfx}/lib to LDFLAGS *** ])
     fi
