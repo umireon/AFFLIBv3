@@ -127,8 +127,8 @@ AC_ARG_WITH([expat],
 have_expat=no
 AS_IF([test "x$with_expat" != xno],
   [AC_CHECK_HEADER([expat.h],
-    [AC_CHECK_LIB([expat], [XML_ParserCreate],
-      [have_expat=yes])])
+    [AC_CHECK_LIB([expat], [XML_ParserCreate])])
+   have_expat=${ac_cv_lib_expat_XML_ParserCreate-no}
    AS_IF([test "x$with_expat" != xcheck && test "x$have_expat" = xno],
     [AC_MSG_FAILURE([--with-expat was given but test for expat failed])])])
 
@@ -146,8 +146,8 @@ AC_ARG_WITH([curl],
 have_curl=no
 AS_IF([test "x$with_curl" != xno],
   [AC_CHECK_HEADER([curl/curl.h],
-    [AC_CHECK_LIB([curl], [curl_global_init],
-      [have_curl=yes])])
+    [AC_CHECK_LIB([curl], [curl_global_init],,)],)
+   have_curl=${ac_cv_lib_curl_curl_global_init-no}
    AS_IF([test "x$with_curl" != xcheck && test "x$have_curl" = xno],
     [AC_MSG_FAILURE([--with-curl was given but test for curl failed])])])
 
