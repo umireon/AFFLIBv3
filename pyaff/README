@@ -21,7 +21,7 @@ Basic usage example:
   #/usr/bin/python
   import pyaff
 
-  fd = pyaff("diskimage.aff")
+  fd = pyaff.open("diskimage.aff")
   data = fd.read(1000)
   fd.seek(0, SEEK_SET)
 

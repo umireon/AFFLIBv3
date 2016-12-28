@@ -28,7 +28,6 @@ AC_CONFIG_MACRO_DIR([m4])
 
 # We are now threading
 m4_include([m4/acx_pthread.m4])
-m4_include([m4/acinclude.m4])
 ACX_PTHREAD()
 
 if test x"${cross_compiling}" = "xno" ; then
@@ -202,13 +201,11 @@ AM_CONDITIONAL([MAYBE_QEMU],[test "x${enable_qemu}" = "xyes"])  # used by automa
 ### PyAFF
 ################################################################
 # python checks
-# (requires autoconf 1.5+ and the macros in acinclude.m4)
 AC_ARG_ENABLE([python],
 	AC_HELP_STRING([--enable-python=no], [Build python bindings (pyaff)]),
         [enable_python=$enableval], [enable_python=no])
 if test "${enable_python}" = "yes" ; then
-  AM_PATH_PYTHON([2.5])
-  AC_PYTHON_DEVEL()
+  AM_PATH_PYTHON()
   AC_DEFINE([HAVE_PYTHON],1,[Build Python bindings])
 fi
 

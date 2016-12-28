@@ -48,6 +48,11 @@ EXTRA_DIST = $(DOCS) \
 	win32/afflib.mak \
 	win32/make.bat
 
+install-data-hook:
+if HAVE_PYTHON
+	( cd pyaff ; $(MAKE) $(AM_MAKEFLAGS) install-pyaff )
+endif
+
 #
 # Note: don't forget to run autoreconf when significant changes are made
 #

@@ -1,8 +1,18 @@
-from distutils.core import setup, Extension
+try:
+    from setuptools import setup, Extension, command
+except ImportError:
+    from distutils.core import setup, Extension
 
-pyaff = Extension('pyaff',
-                  libraries = ['afflib'],
-                  sources = ['pyaff.c'])
+try:
+    from Cython.Build import cythonize
+    USE_CYTHON = True
+except ImportError:
+    USE_CYTHON = False
+
+pyaff = [Extension('pyaff', ['pyaff.pyx'], libraries = ['afflib'])]
+
+if USE_CYTHON:
+    pyaff = cythonize(pyaff)
 
 setup (name = 'PyAFF',
        version = '0.1',
@@ -11,4 +21,4 @@ setup (name = 'PyAFF',
        author_email = 'david.collett@gmail.com',
        url = 'www.pyflag.net',
        license = "GPL",
-       ext_modules = [pyaff])
+       ext_modules = pyaff)
