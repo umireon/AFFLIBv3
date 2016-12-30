@@ -12,7 +12,7 @@ pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = afflib.pc
 
 include_HEADERS = 
-pkginclude_HEADERS = lib/afflib.h lib/afflib_i.h lib/aftimer.h lib/utils.h  
+pkginclude_HEADERS = include/afflib/afflib.h include/afflib/afflib_i.h include/afflib/aftimer.h include/afflib/utils.h  
 
 ACLOCAL_AMFLAGS = -I m4
 
